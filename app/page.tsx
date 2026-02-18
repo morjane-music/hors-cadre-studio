@@ -1,65 +1,168 @@
-import Image from "next/image";
+﻿import Link from "next/link";
+import type { Metadata } from "next";
+import Container from "@/components/layout/Container";
+import Hero from "@/components/sections/Hero";
+import "./site.css";
+
+export const metadata: Metadata = {
+  title: "Studio créatif pour artistes, indépendants et petites marques",
+  description:
+    "Direction forte, exécution singulière. Découvrez la méthode Hors Cadre Studio et des offres activables rapidement.",
+};
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="site-root page-home">
+      <Container className="site-wrap">
+        <Hero />
+
+        <div className="site-section site-section-anim site-reveal accent-blue" data-reveal data-reveal-delay="40">
+          <div className="site-section-title">Showreel de r&eacute;f&eacute;rence</div>
+          <div className="site-video-card site-parallax" data-parallax>
+            <div className="site-video-badge">Showreel</div>
+            <video className="site-video" controls preload="metadata" src="/videos/morjane-demo.mp4" />
+            <div className="site-note">Un extrait r&eacute;el pour juger le niveau de direction, de design et de finition.</div>
+          </div>
+          <div className="site-cta">
+            <Link href="/projets" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
+              Voir les r&eacute;alisations
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="site-section site-section-anim site-reveal accent-sand" data-reveal data-reveal-delay="80">
+          <div className="site-section-title">Ce Que Vous Obtenez</div>
+          <div className="site-grid site-stagger site-grid-obtention" data-flow>
+            <div className="site-card">
+              <div className="site-icon">01</div>
+              <span className="site-pill site-pill-wide">Clart&eacute;</span>
+              <div className="site-card-title">Positionnement précis</div>
+              <div className="site-list-item">Votre activit&eacute; est comprise en quelques secondes.</div>
+            </div>
+            <div className="site-card">
+              <div className="site-icon">02</div>
+              <span className="site-pill site-pill-wide">Impact</span>
+              <div className="site-card-title">Design qui marque</div>
+              <div className="site-list-item">Une image forte, coh&eacute;rente et m&eacute;morable.</div>
+            </div>
+            <div className="site-card">
+              <div className="site-icon">03</div>
+              <span className="site-pill site-pill-wide">Ma&icirc;trise</span>
+              <div className="site-card-title">Ex&eacute;cution singuli&egrave;re</div>
+              <div className="site-list-item">Un livrable propre, pr&ecirc;t &agrave; l&apos;emploi.</div>
+            </div>
+          </div>
         </div>
-      </main>
+
+        <div className="site-section site-section-anim site-reveal accent-green" data-reveal data-reveal-delay="100">
+          <div className="site-section-title">Pourquoi Choisir Hors Cadre Studio</div>
+          <div className="site-grid site-stagger" data-flow>
+            <div className="site-card">
+              <div className="site-card-title">Direction claire</div>
+              <div className="site-list-item">
+                Une vision forte, des choix tranch&eacute;s, une ex&eacute;cution sans dispersion.
+              </div>
+            </div>
+            <div className="site-card">
+              <div className="site-card-title">M&eacute;thode rapide</div>
+              <div className="site-list-item">
+                Un parcours simple en 3 &eacute;tapes pour avancer vite et proprement.
+              </div>
+            </div>
+            <div className="site-card">
+              <div className="site-card-title">R&eacute;sultat activable</div>
+              <div className="site-list-item">
+                Site, identit&eacute; et assets livr&eacute;s pour &ecirc;tre utilis&eacute;s tout de suite.
+              </div>
+            </div>
+          </div>
+          <div className="site-cta">
+            <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
+              Parler de votre projet
+            </Link>
+          </div>
+        </div>
+
+        <div className="site-section site-section-anim site-reveal accent-graphite" data-reveal data-reveal-delay="120">
+          <div className="site-section-title">Repères concrets</div>
+          <div className="site-proof site-stagger">
+            <div className="site-stat">
+              <div className="site-stat-value">24-48h</div>
+              <div className="site-stat-label">R&eacute;ponse initiale exploitable avec plan de suite.</div>
+            </div>
+            <div className="site-stat">
+              <div className="site-stat-value">3 &eacute;tapes</div>
+              <div className="site-stat-label">Vision, production, livraison : parcours lisible.</div>
+            </div>
+            <div className="site-stat">
+              <div className="site-stat-value">1 cap</div>
+              <div className="site-stat-label">Des d&eacute;cisions utiles, sans effet gratuit.</div>
+            </div>
+          </div>
+          <div className="site-cta">
+            <Link href="/processus" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
+              Voir le processus
+            </Link>
+          </div>
+        </div>
+
+        <div className="site-section site-section-anim site-reveal accent-blue" data-reveal data-reveal-delay="160">
+          <div className="site-section-title">Prestations Principales</div>
+          <div className="site-grid site-stagger" data-flow>
+            <div className="site-card">
+              <div className="site-card-title">Site vitrine</div>
+              <div className="site-list-item">Structure, copywriting, design et mise en ligne.</div>
+            </div>
+            <div className="site-card">
+              <div className="site-card-title">Identit&eacute; visuelle</div>
+              <div className="site-list-item">Logo, palette, typographies et r&egrave;gles d&apos;usage.</div>
+            </div>
+            <div className="site-card">
+              <div className="site-card-title">Direction artistique</div>
+              <div className="site-list-item">Cap cr&eacute;atif pour aligner message, style et perception.</div>
+            </div>
+          </div>
+          <div className="site-cta">
+            <Link href="/prestations" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
+              Voir toutes les offres
+            </Link>
+          </div>
+        </div>
+
+        <div className="site-section site-section-anim site-reveal accent-green" data-reveal data-reveal-delay="200">
+          <div className="site-section-title">Engagements Clairs</div>
+          <div className="site-guarantees site-stagger">
+            <div className="site-guarantee">
+              <div className="site-card-title">Cap affirm&eacute;</div>
+              <div className="site-list-item">Objectifs et livrables explicites d&egrave;s le d&eacute;part.</div>
+            </div>
+            <div className="site-guarantee">
+              <div className="site-card-title">Tempo rapide</div>
+              <div className="site-list-item">Peu d&apos;allers-retours, d&eacute;cisions nettes.</div>
+            </div>
+            <div className="site-guarantee">
+              <div className="site-card-title">Livraison propre</div>
+              <div className="site-list-item">Passation claire et accompagnement initial.</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="site-section site-section-anim site-reveal site-break" data-reveal data-reveal-delay="240">
+          <div className="site-signature">
+            <div className="site-signature-title">Autorit&eacute; cr&eacute;ative, sous contr&ocirc;le.</div>
+            <div className="site-signature-sub">
+              Un site qui dit clairement qui vous &ecirc;tes, ce que vous proposez et comment vous contacter.
+            </div>
+            <div className="site-cta site-signature-cta">
+              <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
+                D&eacute;marrer un projet
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Container>
     </div>
   );
 }
+
+
