@@ -12,9 +12,9 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://horscadrestudio.re"
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   icons: {
-    icon: [{ url: "/brand/logo-full.png", type: "image/png" }],
-    shortcut: ["/brand/logo-full.png"],
-    apple: [{ url: "/brand/logo-full.png", type: "image/png" }],
+    icon: [{ url: "/favicon.ico", type: "image/x-icon" }, { url: "/icon.png", type: "image/png" }],
+    shortcut: ["/favicon.ico"],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png" }],
   },
   title: {
     default: "Hors Cadre Studio - Direction créative, web et identité visuelle",
