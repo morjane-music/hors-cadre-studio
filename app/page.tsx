@@ -37,7 +37,7 @@ export default function Home() {
               <div className="site-icon">01</div>
               <span className="site-pill site-pill-wide">Clart&eacute;</span>
               <div className="site-card-title">Positionnement précis</div>
-              <div className="site-list-item">Votre activit&eacute; est comprise en quelques secondes.</div>
+              <div className="site-list-item">Votre activit&eacute; est comprise imm&eacute;diatement.</div>
             </div>
             <div className="site-card">
               <div className="site-icon">02</div>
@@ -58,15 +58,15 @@ export default function Home() {
           <div className="site-section-title">Pourquoi Choisir Hors Cadre Studio</div>
           <div className="site-grid site-stagger" data-flow>
             <div className="site-card">
-              <div className="site-card-title">Direction claire</div>
+              <div className="site-card-title">Direction assumée</div>
               <div className="site-list-item">
                 Une vision forte, des choix tranch&eacute;s, une ex&eacute;cution sans dispersion.
               </div>
             </div>
             <div className="site-card">
-              <div className="site-card-title">M&eacute;thode rapide</div>
+              <div className="site-card-title">M&eacute;thode directe</div>
               <div className="site-list-item">
-                Un parcours simple en 3 &eacute;tapes pour avancer vite et proprement.
+                Un parcours simple en 3 &eacute;tapes pour avancer sans friction.
               </div>
             </div>
             <div className="site-card">
@@ -137,12 +137,12 @@ export default function Home() {
               <div className="site-list-item">Objectifs et livrables explicites d&egrave;s le d&eacute;part.</div>
             </div>
             <div className="site-guarantee">
-              <div className="site-card-title">Tempo rapide</div>
-              <div className="site-list-item">Peu d&apos;allers-retours, d&eacute;cisions nettes.</div>
+              <div className="site-card-title">Tempo direct</div>
+              <div className="site-list-item">Peu d&apos;allers-retours, d&eacute;cisions assum&eacute;es.</div>
             </div>
             <div className="site-guarantee">
-              <div className="site-card-title">Livraison propre</div>
-              <div className="site-list-item">Passation claire et accompagnement initial.</div>
+              <div className="site-card-title">Passation solide</div>
+              <div className="site-list-item">Transmission structur&eacute;e et accompagnement initial.</div>
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@ export default function Home() {
           <div className="site-signature">
             <div className="site-signature-title">Autorit&eacute; cr&eacute;ative, sous contr&ocirc;le.</div>
             <div className="site-signature-sub">
-              Un site qui dit clairement qui vous &ecirc;tes, ce que vous proposez et comment vous contacter.
+              Un site qui affirme qui vous &ecirc;tes, ce que vous proposez et comment vous contacter.
             </div>
             <div className="site-cta site-signature-cta">
               <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>

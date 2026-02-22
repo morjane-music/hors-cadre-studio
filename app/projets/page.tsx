@@ -28,6 +28,9 @@ export default function ProjetsPage() {
           <p className="site-subtitle">
             Des exemples concrets pour &eacute;valuer la direction, la coh&eacute;rence du design et la finition.
           </p>
+          <p className="site-note">
+            Cette section montre surtout des exemples de création de sites. Les autres prestations (identité visuelle, direction artistique, supports de communication) sont présentées sur demande.
+          </p>
           <div className="site-cta">
             <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
               Demander des exemples adapt&eacute;s

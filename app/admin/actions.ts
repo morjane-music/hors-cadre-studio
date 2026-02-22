@@ -46,15 +46,40 @@ async function createCheckoutSession({
 }
 
 function getTotalPrice(type: string) {
-  switch (type) {
+  const normalized = type.trim();
+  switch (normalized) {
+    case "Offre Essentiel":
+      return 1100;
     case "Site vitrine":
-      return 1000;
+    case "Site vitrine (one-shot)":
+      return 1500;
     case "Identité visuelle":
-      return 800;
-    case "Affiche / flyer":
-      return 300;
+    case "Identité visuelle (one-shot)":
+      return 1400;
+    case "Direction artistique":
+    case "Direction artistique (one-shot)":
+      return 2200;
+    case "Visuel Essentiel":
+      return 120;
+    case "Visuel Plus":
+      return 180;
+    case "Pack Événement":
+    case "Pack Event":
+      return 350;
+    case "Pack Lancement":
+      return 1900;
+    case "Pack Signature":
+      return 2900;
+    case "Pack Hors Cadre":
+      return 4200;
+    case "Maintenance Essentielle":
+      return 90;
+    case "Maintenance Premium":
+      return 150;
     default:
-      return 500;
+      throw new Error(
+        "Type sans prix fixe. Utilise 'Générer lien personnalisé' pour ce dossier."
+      );
   }
 }
 

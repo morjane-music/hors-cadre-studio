@@ -11,6 +11,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://horscadrestudio.re"
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  icons: {
+    icon: [{ url: "/brand/logo-full.png", type: "image/png" }],
+    shortcut: ["/brand/logo-full.png"],
+    apple: [{ url: "/brand/logo-full.png", type: "image/png" }],
+  },
   title: {
     default: "Hors Cadre Studio - Direction créative, web et identité visuelle",
     template: "%s | Hors Cadre Studio",
@@ -25,7 +30,7 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     siteName: "Hors Cadre Studio",
     title: "Hors Cadre Studio - Direction créative, web et identité visuelle",
-    description: "Un studio créatif orienté résultat : vision claire, design fort, exécution nette.",
+    description: "Un studio créatif orienté résultat : direction assumée, design fort, exécution singulière.",
     url: "/",
     images: [
       {

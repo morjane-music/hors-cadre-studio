@@ -134,6 +134,11 @@ export default function Header() {
     playUiBeep(480, 0.06);
   }
 
+  function closeMenus() {
+    setOpen(false);
+    setA11yOpen(false);
+  }
+
   if (pathname?.startsWith("/admin")) {
     return null;
   }
@@ -170,11 +175,11 @@ export default function Header() {
         </button>
 
         <div className={`site-nav ${open ? "site-nav-open" : ""}`}>
-          <Link href="/prestations">Prestations</Link>
-          <Link href="/projets">Projets</Link>
-          <Link href="/processus">Processus</Link>
-          <Link href="/a-propos">À propos</Link>
-          <Link href="/contact" className="site-nav-cta">
+          <Link href="/prestations" onClick={closeMenus}>Prestations</Link>
+          <Link href="/projets" onClick={closeMenus}>Projets</Link>
+          <Link href="/processus" onClick={closeMenus}>Processus</Link>
+          <Link href="/a-propos" onClick={closeMenus}>À propos</Link>
+          <Link href="/contact" className="site-nav-cta" onClick={closeMenus}>
             Contact
           </Link>
           <button

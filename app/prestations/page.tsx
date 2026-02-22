@@ -7,7 +7,7 @@ import "../site.css";
 export const metadata: Metadata = {
   title: "Prestations et packs",
   description:
-    "Prestations one-shot, packs Hors Cadre, maintenance et devis sur mesure. Vision rapide et livrables clairs.",
+    "Prestations one-shot, packs Hors Cadre, maintenance et devis sur mesure. Vision assumée et livrables activables.",
 };
 
 export default function PrestationsPage() {
@@ -18,9 +18,17 @@ export default function PrestationsPage() {
           <span className="site-kicker">Prestations</span>
           <h1 className="site-title">Clarté, impact, maîtrise.</h1>
           <p className="site-subtitle">
-            Chaque offre a un rôle net.
+            Chaque offre a un rôle clair.
             <span className="site-subtitle-mobile-break"> Peu d&apos;options, mais les bonnes.</span>
           </p>
+          <div className="site-proof-strip">
+            <Link href="#offres-web" className="site-proof-pill">
+              Offres site & identité
+            </Link>
+            <Link href="#studio-graphique" className="site-proof-pill">
+              Studio graphique
+            </Link>
+          </div>
           <div className="site-cta">
             <Link href="/contact" className="site-btn site-btn-primary">
               Démarrer un projet
@@ -44,12 +52,12 @@ export default function PrestationsPage() {
             <div className="site-card">
               <div className="site-icon">B</div>
               <div className="site-card-title">Exécution</div>
-              <div className="site-list-item">Production structurée avec feedback court et décisions nettes.</div>
+              <div className="site-list-item">Production structurée avec feedback court et décisions assumées.</div>
             </div>
             <div className="site-card">
               <div className="site-icon">C</div>
               <div className="site-card-title">Livraison</div>
-              <div className="site-list-item">Passation claire, fichiers propres, activation immédiate.</div>
+              <div className="site-list-item">Passation structurée, fichiers propres, activation immédiate.</div>
             </div>
           </div>
           <div className="site-cta">
@@ -59,33 +67,78 @@ export default function PrestationsPage() {
           </div>
         </div>
 
-        <div className="site-section site-section-anim site-reveal accent-blue" data-reveal data-reveal-delay="80">
-          <div className="site-section-title">Services à l&apos;unité</div>
+        <div id="offres-web" className="site-section site-section-anim site-reveal accent-blue" data-reveal data-reveal-delay="80">
+          <div className="site-section-title">Offres site & identité</div>
+          <Link href="/contact?offer=Offre%20Essentiel" className="site-card site-card-link site-card-featured" data-cursor data-sound>
+            <div>
+              <div className="site-pill">Nouveau</div>
+              <div className="site-card-title">Offre Essentiel</div>
+              <div className="site-list-item">Format léger pour démarrer vite avec une base solide.</div>
+            </div>
+            <div className="site-pill">À partir de 1 100 €</div>
+          </Link>
           <div className="site-grid site-stagger" data-flow>
             <Link href="/contact?offer=Site%20vitrine%20(one-shot)" className="site-card site-card-link" data-cursor data-sound>
               <div className="site-card-title">Site vitrine (one-shot)</div>
               <div className="site-list-item">Architecture, design, mise en ligne.</div>
               <div className="site-list-item">Pour poser une présence claire rapidement.</div>
-              <div className="site-pill">À partir de 1 000 €</div>
+              <div className="site-pill">À partir de 1 500 €</div>
             </Link>
             <Link href="/contact?offer=Identit%C3%A9%20visuelle%20(one-shot)" className="site-card site-card-link" data-cursor data-sound>
               <div className="site-card-title">Identité visuelle (one-shot)</div>
               <div className="site-list-item">Logo, palette, typographies, règles d&apos;usage.</div>
               <div className="site-list-item">Pour rendre votre marque reconnaissable tout de suite.</div>
-              <div className="site-pill">À partir de 900 €</div>
+              <div className="site-pill">À partir de 1 400 €</div>
             </Link>
             <Link href="/contact?offer=Direction%20artistique%20(one-shot)" className="site-card site-card-link" data-cursor data-sound>
               <div className="site-card-title">Direction artistique (one-shot)</div>
               <div className="site-list-item">Cap visuel, références utiles, principes créatifs.</div>
               <div className="site-list-item">Pour un projet aligné et différenciant.</div>
-              <div className="site-pill">Sur devis</div>
+              <div className="site-pill">À partir de 2 200 €</div>
             </Link>
           </div>
+          <p className="site-note">
+            Nos tarifs sont fixes et optimisés pour la qualité et le résultat.
+            <br />
+            Si votre budget est plus serré mais que le projet est sérieux, contactez-nous pour une version allégée adaptée.
+          </p>
           <div className="site-cta">
             <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
               Demander une offre à l&apos;unité
             </Link>
           </div>
+        </div>
+
+        <div id="studio-graphique" className="site-section site-section-anim site-reveal accent-sand" data-reveal data-reveal-delay="90">
+          <div className="site-section-title">Studio graphique — Visuels & événements</div>
+          <div className="site-grid site-stagger" data-flow>
+            <Link href="/contact?offer=Visuel%20Essentiel" className="site-card site-card-link" data-cursor data-sound>
+              <div className="site-card-title">Visuel Essentiel</div>
+              <div className="site-list-item">Format compact pour annonces ponctuelles, événements locaux et sorties rapides.</div>
+              <div className="site-list-item">1 concept visuel structuré, 1 session d&apos;ajustement, export print ou digital.</div>
+              <div className="site-list-item">Livraison prête à diffuser.</div>
+              <div className="site-pill">120 €</div>
+            </Link>
+            <Link href="/contact?offer=Visuel%20Plus" className="site-card site-card-link" data-cursor data-sound>
+              <div className="site-card-title">Visuel Plus</div>
+              <div className="site-list-item">Pour sorties musicales et communications plus travaillées.</div>
+              <div className="site-list-item">2 propositions créatives, 2 sessions d&apos;ajustement.</div>
+              <div className="site-list-item">Version print + digital, formats principaux optimisés.</div>
+              <div className="site-pill">180 €</div>
+            </Link>
+            <Link href="/contact?offer=Pack%20%C3%89v%C3%A9nement" className="site-card site-card-link" data-cursor data-sound>
+              <div className="site-card-title">Pack Événement</div>
+              <div className="site-list-item">Pour concerts, lancements et diffusion multi-plateformes.</div>
+              <div className="site-list-item">Affiche principale + déclinaisons réseaux (carré, story, bannière).</div>
+              <div className="site-list-item">Harmonisation globale et ajustements inclus.</div>
+              <div className="site-pill">350 €</div>
+            </Link>
+          </div>
+          <p className="site-note">
+            Les formats sont structurés pour garantir efficacité et qualité.
+            <br />
+            Pour des demandes complexes ou multi-supports spécifiques, un devis personnalisé peut être proposé.
+          </p>
         </div>
 
         <div className="site-section site-section-anim site-reveal accent-graphite" data-reveal data-reveal-delay="100">
@@ -96,23 +149,28 @@ export default function PrestationsPage() {
               <div className="site-card-title">Pack Lancement</div>
               <div className="site-list-item">Site vitrine 1 page + structure de contenu.</div>
               <div className="site-list-item">Direction visuelle de base pour lancer vite.</div>
-              <div className="site-pill">À partir de 1 400 €</div>
+              <div className="site-pill">À partir de 1 900 €</div>
             </div>
             <div className="site-card">
               <div className="site-icon">P2</div>
               <div className="site-card-title">Pack Signature</div>
               <div className="site-list-item">Site vitrine + identité visuelle complète.</div>
               <div className="site-list-item">Système de marque cohérent et activable.</div>
-              <div className="site-pill">À partir de 2 200 €</div>
+              <div className="site-pill">À partir de 2 900 €</div>
             </div>
             <div className="site-card">
               <div className="site-icon">P3</div>
               <div className="site-card-title">Pack Hors Cadre</div>
               <div className="site-list-item">Direction artistique + site + assets prioritaires.</div>
               <div className="site-list-item">Direction renforcée pour sortie de projet premium.</div>
-              <div className="site-pill">À partir de 3 200 €</div>
+              <div className="site-pill">À partir de 4 200 €</div>
             </div>
           </div>
+          <p className="site-note">
+            Nos tarifs sont fixes et optimisés pour la qualité et le résultat.
+            <br />
+            Si votre budget est plus serré mais que le projet est sérieux, contactez-nous pour une version allégée adaptée.
+          </p>
           <div className="site-cta">
             <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
               Demander un pack
@@ -150,17 +208,27 @@ export default function PrestationsPage() {
         </div>
 
         <div className="site-section site-section-anim site-reveal accent-green" data-reveal data-reveal-delay="180">
-          <div className="site-section-title">Maintenance mensuelle</div>
-          <div className="site-card">
-            <div className="site-list-item">Mises à jour légères et vérifications techniques.</div>
-            <div className="site-list-item">Un lot de modifications par mois.</div>
-            <div className="site-list-item">Suivi simple et réactif.</div>
-            <div className="site-pill">À partir de 120 € / mois</div>
-            <div className="site-cta">
-              <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
-                Demander la maintenance
-              </Link>
-            </div>
+          <div className="site-section-title">Suivi et maintenance</div>
+          <div className="site-grid">
+            <Link href="/contact?offer=Maintenance%20Essentielle" className="site-card site-card-link" data-cursor data-sound>
+              <div className="site-card-title">Maintenance Essentielle</div>
+              <div className="site-list-item">Mises à jour techniques et monitoring sécurité.</div>
+              <div className="site-list-item">Sauvegardes et contrôle de stabilité.</div>
+              <div className="site-list-item">Suivi mensuel léger.</div>
+              <div className="site-pill">90 € / mois</div>
+            </Link>
+            <Link href="/contact?offer=Maintenance%20Premium" className="site-card site-card-link" data-cursor data-sound>
+              <div className="site-card-title">Maintenance Premium</div>
+              <div className="site-list-item">Tout l&apos;Essentielle + support prioritaire.</div>
+              <div className="site-list-item">1 h de modifications incluse chaque mois.</div>
+              <div className="site-list-item">Conseils de pilotage et optimisation continue.</div>
+              <div className="site-pill">150 € / mois</div>
+            </Link>
+          </div>
+          <div className="site-cta">
+            <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
+              Activer une maintenance
+            </Link>
           </div>
         </div>
 
@@ -173,6 +241,42 @@ export default function PrestationsPage() {
               <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
                 Demander un devis
               </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="site-section site-section-anim site-reveal accent-blue" data-reveal data-reveal-delay="240">
+          <div className="site-section-title">FAQ</div>
+          <div className="site-grid">
+            <div className="site-card">
+              <div className="site-card-title">Quel acompte est demandé ?</div>
+              <div className="site-list-item">
+                Par défaut, l&apos;acompte est de 40 % puis le solde de 60 % à la livraison.
+              </div>
+            </div>
+            <div className="site-card">
+              <div className="site-card-title">Et pour un projet sur mesure ?</div>
+              <div className="site-list-item">
+                Le montant est défini au cas par cas, puis un lien de paiement personnalisé est envoyé.
+              </div>
+            </div>
+            <div className="site-card">
+              <div className="site-card-title">Puis-je commencer avec un budget serré ?</div>
+              <div className="site-list-item">
+                Oui. Si le projet est sérieux, nous proposons une version allégée avec périmètre clair.
+              </div>
+            </div>
+            <div className="site-card">
+              <div className="site-card-title">Quels sont les délais moyens ?</div>
+              <div className="site-list-item">
+                One-shot : généralement 2 à 4 semaines. Pack : 4 à 8 semaines selon le périmètre validé.
+              </div>
+            </div>
+            <div className="site-card">
+              <div className="site-card-title">Combien de retours sont inclus ?</div>
+              <div className="site-list-item">
+                Des itérations courtes sont prévues à chaque étape clé pour valider sans rallonger le rythme.
+              </div>
             </div>
           </div>
         </div>

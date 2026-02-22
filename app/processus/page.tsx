@@ -6,7 +6,7 @@ import "../site.css";
 export const metadata: Metadata = {
   title: "Processus",
   description:
-    "Un parcours en 3 étapes : orientation, design/production, livraison. Chaque validation est claire et actionnable.",
+    "Un parcours en 3 étapes : orientation, design/production, livraison. Chaque validation est explicite et actionnable.",
 };
 
 export default function ProcessusPage() {
@@ -17,7 +17,7 @@ export default function ProcessusPage() {
           <span className="site-kicker">Processus</span>
           <h1 className="site-title">Un tempo assumé, zéro flou.</h1>
           <p className="site-subtitle">
-            Chaque étape a un livrable clair. Vous savez où on va et ce qui est validé.
+            Chaque étape a un livrable explicite. Vous savez où on va et ce qui est validé.
           </p>
           <div className="site-cta">
             <Link href="/contact" className="site-btn site-btn-primary" data-magnetic data-cursor data-sound>
@@ -41,7 +41,7 @@ export default function ProcessusPage() {
               <div className="site-icon">02</div>
               <div className="site-card-title">2. Design et production</div>
               <div className="site-list">Conception, ajustements, validation.</div>
-              <div className="site-list">Feedback court, exécution nette.</div>
+              <div className="site-list">Feedback court, exécution singulière.</div>
             </div>
             <div className="site-card">
               <div className="site-icon">03</div>
@@ -60,7 +60,7 @@ export default function ProcessusPage() {
                 <span className="site-rhythm-dot" aria-hidden />
                 <span className="site-rhythm-kicker">Pilotage</span>
               </div>
-              <div className="site-card-title">Décisions nettes</div>
+              <div className="site-card-title">Décisions assumées</div>
               <div className="site-list">Décisions rapides, sans réunion inutile.</div>
               <div className="site-list">Étapes visibles et validées.</div>
               <div className="site-list">Un point de contact du début à la fin.</div>

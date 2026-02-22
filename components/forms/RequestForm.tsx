@@ -192,11 +192,17 @@ export default function RequestForm({ presetType }: Props) {
                 aria-describedby={feedback ? feedbackId : undefined}
               >
                 <option>Site vitrine</option>
+                <option>Offre Essentiel</option>
                 <option>Identité visuelle</option>
                 <option>Direction artistique</option>
+                <option>Visuel Essentiel</option>
+                <option>Visuel Plus</option>
+                <option>Pack Événement</option>
                 <option>Pack Lancement</option>
                 <option>Pack Signature</option>
                 <option>Pack Hors Cadre</option>
+                <option>Maintenance Essentielle</option>
+                <option>Maintenance Premium</option>
                 <option>Demande Kap Numérik (préparation)</option>
                 <option>Projet sur mesure</option>
               </select>
