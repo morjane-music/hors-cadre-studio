@@ -23,7 +23,7 @@ export default function OfferEstimator() {
     if (scope === "brand" || budget === "mid") {
       if (tempo === "soon") {
         return {
-          title: "Identité visuelle (one-shot)",
+          title: "Identité visuelle",
           reason: "Refonte claire et rapide pour renforcer votre singularité visuelle.",
         };
       }
@@ -33,7 +33,7 @@ export default function OfferEstimator() {
       };
     }
     return {
-      title: "Site vitrine (one-shot)",
+      title: "Site vitrine",
       reason: "Une présence web claire, directe et activable rapidement.",
     };
   }, [scope, budget, tempo]);

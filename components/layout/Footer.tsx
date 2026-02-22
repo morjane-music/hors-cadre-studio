@@ -16,7 +16,7 @@ function getFooterContext(pathname: string): FooterContext {
   if (pathname.startsWith("/prestations")) {
     return {
       title: "Choisir juste. Exécuter fort.",
-      copy: "One-shot ou sur mesure : un périmètre clair, un rendu prêt à activer.",
+      copy: "À l’unité ou sur mesure : un périmètre clair, un rendu prêt à activer.",
       primaryHref: "/contact",
       primaryLabel: "Lancer une demande",
       secondaryHref: "/processus",
@@ -94,7 +94,7 @@ export default function Footer() {
   ];
 
   const frameItems = [
-    { label: "One-shot + devis sur mesure", icon: "bolt" as const },
+    { label: "À l’unité + devis sur mesure", icon: "bolt" as const },
     { label: "Réponse initiale rapide (24-48h)", icon: "time" as const },
     { label: "Maintenance mensuelle disponible", icon: "gear" as const },
   ];

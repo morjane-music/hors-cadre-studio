@@ -7,7 +7,7 @@ import "../site.css";
 export const metadata: Metadata = {
   title: "Prestations et packs",
   description:
-    "Prestations one-shot, packs Hors Cadre, maintenance et devis sur mesure. Vision assumée et livrables activables.",
+    "Prestations à l’unité, packs Hors Cadre, maintenance et devis sur mesure. Vision assumée et livrables activables.",
 };
 
 export default function PrestationsPage() {
@@ -78,20 +78,20 @@ export default function PrestationsPage() {
             <div className="site-pill">À partir de 1 100 €</div>
           </Link>
           <div className="site-grid site-stagger" data-flow>
-            <Link href="/contact?offer=Site%20vitrine%20(one-shot)" className="site-card site-card-link" data-cursor data-sound>
-              <div className="site-card-title">Site vitrine (one-shot)</div>
+            <Link href="/contact?offer=Site%20vitrine" className="site-card site-card-link" data-cursor data-sound>
+              <div className="site-card-title">Site vitrine</div>
               <div className="site-list-item">Architecture, design, mise en ligne.</div>
               <div className="site-list-item">Pour poser une présence claire rapidement.</div>
               <div className="site-pill">À partir de 1 500 €</div>
             </Link>
-            <Link href="/contact?offer=Identit%C3%A9%20visuelle%20(one-shot)" className="site-card site-card-link" data-cursor data-sound>
-              <div className="site-card-title">Identité visuelle (one-shot)</div>
+            <Link href="/contact?offer=Identit%C3%A9%20visuelle" className="site-card site-card-link" data-cursor data-sound>
+              <div className="site-card-title">Identité visuelle</div>
               <div className="site-list-item">Logo, palette, typographies, règles d&apos;usage.</div>
               <div className="site-list-item">Pour rendre votre marque reconnaissable tout de suite.</div>
               <div className="site-pill">À partir de 1 400 €</div>
             </Link>
-            <Link href="/contact?offer=Direction%20artistique%20(one-shot)" className="site-card site-card-link" data-cursor data-sound>
-              <div className="site-card-title">Direction artistique (one-shot)</div>
+            <Link href="/contact?offer=Direction%20artistique" className="site-card site-card-link" data-cursor data-sound>
+              <div className="site-card-title">Direction artistique</div>
               <div className="site-list-item">Cap visuel, références utiles, principes créatifs.</div>
               <div className="site-list-item">Pour un projet aligné et différenciant.</div>
               <div className="site-pill">À partir de 2 200 €</div>
@@ -269,7 +269,7 @@ export default function PrestationsPage() {
             <div className="site-card">
               <div className="site-card-title">Quels sont les délais moyens ?</div>
               <div className="site-list-item">
-                One-shot : généralement 2 à 4 semaines. Pack : 4 à 8 semaines selon le périmètre validé.
+                À l’unité : généralement 2 à 4 semaines. Pack : 4 à 8 semaines selon le périmètre validé.
               </div>
             </div>
             <div className="site-card">
