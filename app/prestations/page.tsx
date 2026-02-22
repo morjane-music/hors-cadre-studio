@@ -23,10 +23,10 @@ export default function PrestationsPage() {
           </p>
           <div className="site-proof-strip">
             <Link href="#offres-web" className="site-proof-pill">
-              Offres site & identité
+              Sites web & identité
             </Link>
             <Link href="#studio-graphique" className="site-proof-pill">
-              Studio graphique
+              Visuels événementiels
             </Link>
           </div>
           <div className="site-cta">
@@ -68,7 +68,7 @@ export default function PrestationsPage() {
         </div>
 
         <div id="offres-web" className="site-section site-section-anim site-reveal accent-blue" data-reveal data-reveal-delay="80">
-          <div className="site-section-title">Offres site & identité</div>
+          <div className="site-section-title">Sites web & identité</div>
           <Link href="/contact?offer=Offre%20Essentiel" className="site-card site-card-link site-card-featured" data-cursor data-sound>
             <div>
               <div className="site-pill">Nouveau</div>
@@ -110,7 +110,7 @@ export default function PrestationsPage() {
         </div>
 
         <div id="studio-graphique" className="site-section site-section-anim site-reveal accent-sand" data-reveal data-reveal-delay="90">
-          <div className="site-section-title">Studio graphique — Visuels & événements</div>
+          <div className="site-section-title">Visuels événementiels</div>
           <div className="site-grid site-stagger" data-flow>
             <Link href="/contact?offer=Visuel%20Essentiel" className="site-card site-card-link" data-cursor data-sound>
               <div className="site-card-title">Visuel Essentiel</div>
