@@ -10,6 +10,15 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
+const inboundReplyEmail =
+  process.env.RESEND_INBOUND_REPLY_EMAIL || "inbound@reply.horscadrestudio.re";
+
+function getReplyToList() {
+  const values = [fromEmail, inboundReplyEmail]
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+  return [...new Set(values)];
+}
 
 async function createCheckoutSession({
   amount,
@@ -304,6 +313,7 @@ export async function sendDiscussionMessage(requestId: string, message: string) 
     const result = await resend.emails.send({
       from: fromEmail,
       to: request.email,
+      replyTo: getReplyToList(),
       subject: `Message de suivi concernant votre demande ${requestTag}`,
       html: `
         <p>Bonjour ${request.name || ""},</p>
