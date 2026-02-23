@@ -300,14 +300,16 @@ export async function sendDiscussionMessage(requestId: string, message: string) 
   let sendError: unknown = null;
 
   try {
+    const requestTag = `[REQ:${requestId}]`;
     const result = await resend.emails.send({
       from: fromEmail,
       to: request.email,
-      subject: "Message de suivi concernant votre demande",
+      subject: `Message de suivi concernant votre demande ${requestTag}`,
       html: `
         <p>Bonjour ${request.name || ""},</p>
         <p>${safe}</p>
         <p>Vous pouvez répondre directement à cet email.</p>
+        <p style="color:#6b7280;font-size:12px;">Référence demande : ${requestTag}</p>
         <p>À bientôt,<br />Hors Cadre Studio</p>
       `,
     });
@@ -484,6 +486,18 @@ export async function createCustomPaymentLink(input: {
   });
 
   return url;
+}
+
+export async function deleteRequest(requestId: string) {
+  await assertAdmin();
+
+  const service = createSupabaseServiceClient();
+  const { error } = await service.from("requests").delete().eq("id", requestId);
+
+  if (error) {
+    console.error("Erreur suppression demande :", error);
+    throw new Error("Impossible de supprimer la demande");
+  }
 }
 
 
