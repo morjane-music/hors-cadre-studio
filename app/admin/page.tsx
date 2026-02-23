@@ -15,7 +15,16 @@ type Status =
   | "pending_solde"
   | "paid_solde"
   | "refused";
+
 type SortKey = "newest" | "oldest" | "name" | "status";
+
+type RequestMessage = {
+  request_id: string;
+  sender: "admin" | "client" | "system";
+  message: string;
+  email_status: "pending" | "sent" | "failed";
+  created_at: string;
+};
 
 function getSortLabel(sort: SortKey) {
   switch (sort) {
@@ -116,10 +125,25 @@ export default async function AdminPage({
   const filteredCount = sortedRequests.length;
   const totalPages = Math.max(1, Math.ceil(filteredCount / perPage));
   const currentPage = Math.min(page, totalPages);
-  const pagedRequests = sortedRequests.slice(
-    (currentPage - 1) * perPage,
-    currentPage * perPage
-  );
+  const pagedRequests = sortedRequests.slice((currentPage - 1) * perPage, currentPage * perPage);
+
+  const requestIds = (pagedRequests ?? []).map((r) => r.id);
+  const { data: requestMessages } =
+    requestIds.length > 0
+      ? await supabase
+          .from("request_messages")
+          .select("request_id,sender,message,email_status,created_at")
+          .in("request_id", requestIds)
+          .order("created_at", { ascending: true })
+      : { data: [] as RequestMessage[] };
+
+  const messagesByRequestId: Record<string, RequestMessage[]> = {};
+  for (const row of (requestMessages as RequestMessage[]) ?? []) {
+    if (!messagesByRequestId[row.request_id]) {
+      messagesByRequestId[row.request_id] = [];
+    }
+    messagesByRequestId[row.request_id].push(row);
+  }
 
   const baseParams = new URLSearchParams();
   if (statusFilter) baseParams.set("status", statusFilter);
@@ -153,7 +177,7 @@ export default async function AdminPage({
               <p className="admin-eyebrow">Hors Cadre Studio · Admin</p>
               <h1 className="admin-title">Demandes reçues</h1>
               <p className="admin-subtitle">
-                {formattedDate} · Vue d’ensemble des demandes et paiements.
+                {formattedDate} · Vue d&apos;ensemble des demandes et paiements.
               </p>
             </div>
             <div className="admin-actions">
@@ -235,11 +259,7 @@ export default async function AdminPage({
             })}
           </div>
 
-          <AdminToolbar
-            initialQuery={searchQuery}
-            initialSort={sortKey}
-            status={statusFilter}
-          />
+          <AdminToolbar initialQuery={searchQuery} initialSort={sortKey} status={statusFilter} />
 
           {items.length === 0 ? (
             <div className="admin-empty">
@@ -249,7 +269,11 @@ export default async function AdminPage({
               </p>
             </div>
           ) : (
-            <AdminDashboard items={items} initialId={items[0]?.id} />
+            <AdminDashboard
+              items={items}
+              initialId={items[0]?.id}
+              messagesByRequestId={messagesByRequestId}
+            />
           )}
 
           <div className="flex items-center justify-between text-sm mt-8">
@@ -261,7 +285,9 @@ export default async function AdminPage({
                 href={buildUrl(baseParams, {
                   page: String(Math.max(1, currentPage - 1)),
                 })}
-                className={`underline ${currentPage === 1 ? "pointer-events-none text-[var(--text-muted)]" : ""}`}
+                className={`underline ${
+                  currentPage === 1 ? "pointer-events-none text-[var(--text-muted)]" : ""
+                }`}
               >
                 Précédent
               </a>
@@ -269,7 +295,9 @@ export default async function AdminPage({
                 href={buildUrl(baseParams, {
                   page: String(Math.min(totalPages, currentPage + 1)),
                 })}
-                className={`underline ${currentPage === totalPages ? "pointer-events-none text-[var(--text-muted)]" : ""}`}
+                className={`underline ${
+                  currentPage === totalPages ? "pointer-events-none text-[var(--text-muted)]" : ""
+                }`}
               >
                 Suivant
               </a>

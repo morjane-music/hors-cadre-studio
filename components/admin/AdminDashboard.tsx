@@ -32,9 +32,18 @@ type RequestItem = {
   created_date?: string | null;
 };
 
+type RequestMessage = {
+  request_id: string;
+  sender: "admin" | "client" | "system";
+  message: string;
+  email_status: "pending" | "sent" | "failed";
+  created_at: string;
+};
+
 type Props = {
   items: RequestItem[];
   initialId?: string;
+  messagesByRequestId?: Record<string, RequestMessage[]>;
 };
 
 function getStatusLabel(status: Status) {
@@ -152,7 +161,22 @@ function getProgressPercent(status: Status) {
   return Math.round(((step + 1) / 4) * 100);
 }
 
-export default function AdminDashboard({ items, initialId }: Props) {
+function getSenderLabel(sender: RequestMessage["sender"]) {
+  switch (sender) {
+    case "admin":
+      return "Admin";
+    case "client":
+      return "Client";
+    case "system":
+      return "Système";
+  }
+}
+
+export default function AdminDashboard({
+  items,
+  initialId,
+  messagesByRequestId = {},
+}: Props) {
   const initial = initialId ?? items[0]?.id;
   const [selectedId, setSelectedId] = useState<string | undefined>(initial);
 
@@ -162,6 +186,7 @@ export default function AdminDashboard({ items, initialId }: Props) {
   );
 
   const customOnly = selected ? isCustomOnlyType(selected.type) : false;
+  const selectedMessages = selected ? messagesByRequestId[selected.id] ?? [] : [];
 
   return (
     <div className="admin-layout">
@@ -228,7 +253,7 @@ export default function AdminDashboard({ items, initialId }: Props) {
                 <span className="admin-next-icon" aria-hidden="true">
                   *
                 </span>
-                Ce qu’il faut faire maintenant
+                Ce qu&apos;il faut faire maintenant
                 {isActionRequired(selected.status) ? (
                   <span className="admin-next-pill admin-next-pill-action">Action requise</span>
                 ) : (
@@ -320,6 +345,25 @@ export default function AdminDashboard({ items, initialId }: Props) {
                 }
               )}
             </div>
+
+            <p className="admin-section-title">Historique discussion</p>
+            {selectedMessages.length === 0 ? (
+              <div className="admin-soft text-sm text-[var(--text-muted)]">
+                Aucun message enregistré pour cette demande.
+              </div>
+            ) : (
+              <div className="admin-soft space-y-3">
+                {selectedMessages.map((m, idx) => (
+                  <div key={`${selected.id}-${m.created_at}-${idx}`} className="border-b pb-2 last:border-b-0">
+                    <div className="text-xs text-[var(--text-muted)] mb-1">
+                      {getSenderLabel(m.sender)} · {new Date(m.created_at).toLocaleString("fr-FR")} ·
+                      envoi : {m.email_status}
+                    </div>
+                    <div className="whitespace-pre-wrap text-sm">{m.message}</div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="admin-soft text-sm">
               <p>

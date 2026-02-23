@@ -4,10 +4,12 @@ import { Resend } from "resend";
 import Stripe from "stripe";
 import { requireAdmin } from "@/lib/admin-auth";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
+import { createSupabaseServiceClient } from "@/lib/supabase-service";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 
 async function createCheckoutSession({
   amount,
@@ -90,6 +92,30 @@ async function assertAdmin() {
   }
 }
 
+async function saveRequestMessage(input: {
+  requestId: string;
+  sender: "admin" | "client" | "system";
+  message: string;
+  emailTo?: string | null;
+  emailStatus?: "pending" | "sent" | "failed";
+  resendId?: string | null;
+  errorMessage?: string | null;
+}) {
+  const service = createSupabaseServiceClient();
+  const { error } = await service.from("request_messages").insert({
+    request_id: input.requestId,
+    sender: input.sender,
+    message: input.message,
+    email_to: input.emailTo ?? null,
+    email_status: input.emailStatus ?? "pending",
+    resend_id: input.resendId ?? null,
+    error_message: input.errorMessage ?? null,
+  });
+  if (error) {
+    console.error("request_messages insert failed:", error);
+  }
+}
+
 export async function acceptAndCreateAcompte(requestId: string, type: string) {
   await assertAdmin();
 
@@ -123,7 +149,7 @@ export async function acceptAndCreateAcompte(requestId: string, type: string) {
     .eq("id", requestId);
 
   await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: fromEmail,
     to: request.email,
     subject: "Votre demande a été acceptée",
     html: `
@@ -227,20 +253,10 @@ export async function prolongDiscussion(requestId: string) {
     console.warn("Statut discussion non appliqué :", error);
   }
 
-  await resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: request.email,
-    subject: "Complément d'informations pour votre demande",
-    html: `
-      <p>Bonjour ${request.name || ""},</p>
-      <p>Merci pour votre demande.</p>
-      <p>
-        Nous avons besoin de quelques précisions pour bien orienter votre projet.
-        Vous pouvez répondre directement à cet email avec les détails utiles.
-      </p>
-      <p>À bientôt,<br />Hors Cadre Studio</p>
-    `,
-  });
+  const defaultMessage =
+    "Bonjour,\n\nMerci pour votre demande. Pour bien orienter le projet, pouvez-vous préciser :\n- objectif principal\n- délai souhaité\n- budget indicatif\n\nMerci.";
+
+  await sendDiscussionMessage(requestId, defaultMessage);
 }
 
 export async function sendDiscussionMessage(requestId: string, message: string) {
@@ -278,17 +294,53 @@ export async function sendDiscussionMessage(requestId: string, message: string) 
     .replace(/>/g, "&gt;")
     .replace(/\n/g, "<br />");
 
-  await resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: request.email,
-    subject: "Message de suivi concernant votre demande",
-    html: `
-      <p>Bonjour ${request.name || ""},</p>
-      <p>${safe}</p>
-      <p>Vous pouvez répondre directement à cet email.</p>
-      <p>À bientôt,<br />Hors Cadre Studio</p>
-    `,
+  let emailStatus: "sent" | "failed" = "sent";
+  let resendId: string | null = null;
+  let errorMessage: string | null = null;
+  let sendError: unknown = null;
+
+  try {
+    const result = await resend.emails.send({
+      from: fromEmail,
+      to: request.email,
+      subject: "Message de suivi concernant votre demande",
+      html: `
+        <p>Bonjour ${request.name || ""},</p>
+        <p>${safe}</p>
+        <p>Vous pouvez répondre directement à cet email.</p>
+        <p>À bientôt,<br />Hors Cadre Studio</p>
+      `,
+    });
+
+    if ((result as { error?: { message?: string } | null }).error) {
+      throw new Error(
+        (result as { error?: { message?: string } | null }).error?.message ||
+          "Échec de l'envoi email"
+      );
+    }
+    resendId =
+      (result as { data?: { id?: string } | null }).data?.id ?? null;
+  } catch (error) {
+    emailStatus = "failed";
+    errorMessage = error instanceof Error ? error.message : "Erreur inconnue";
+    sendError = error;
+  }
+
+  await saveRequestMessage({
+    requestId,
+    sender: "admin",
+    message: content,
+    emailTo: request.email,
+    emailStatus,
+    resendId,
+    errorMessage,
   });
+
+  if (sendError) {
+    throw new Error(
+      "Message enregistré mais l'email n'a pas pu être envoyé. Vérifie RESEND_FROM_EMAIL / RESEND_API_KEY."
+    );
+  }
 }
 
 export async function requestSolde(requestId: string, type: string) {
@@ -319,7 +371,7 @@ export async function requestSolde(requestId: string, type: string) {
     .eq("id", requestId);
 
   await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: fromEmail,
     to: request.email,
     subject: "Solde de votre prestation",
     html: `
@@ -416,7 +468,7 @@ export async function createCustomPaymentLink(input: {
 
   const amountDisplay = normalizedAmount.toFixed(2).replace(".", ",");
   await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: fromEmail,
     to: request.email,
     subject:
       paymentType === "acompte"

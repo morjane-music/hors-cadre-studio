@@ -24,10 +24,10 @@ export default function ProlongDiscussionButton({
       setLoading(true);
       await sendDiscussionMessage(requestId, message);
       setOpen(false);
-      setFeedback({ kind: "success", text: "Message envoyé au client. Rechargement…" });
+      setFeedback({ kind: "success", text: "Message envoyé au client. Rechargement..." });
       setTimeout(() => window.location.reload(), 450);
     } catch {
-      setFeedback({ kind: "error", text: "Erreur lors de l’envoi du message." });
+      setFeedback({ kind: "error", text: "Erreur lors de l'envoi du message." });
     } finally {
       setLoading(false);
     }
@@ -35,11 +35,7 @@ export default function ProlongDiscussionButton({
 
   return (
     <div className="space-y-2">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="admin-btn"
-      >
+      <button type="button" onClick={() => setOpen((v) => !v)} className="admin-btn">
         {open ? "Fermer" : "Prolonger discussion"}
       </button>
 
