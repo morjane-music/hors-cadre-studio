@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import AcceptButton from "@/app/admin/AcceptButton";
 import RegenerateLinkButton from "@/app/admin/RegenerateLinkButton";
 import MarkAcomptePaidButton from "@/app/admin/MarkAcomptePaidButton";
@@ -55,15 +56,15 @@ function getStatusLabel(status: Status) {
     case "discussion":
       return "Discussion";
     case "accepted":
-      return "Acceptée";
+      return "Acceptee";
     case "paid_acompte":
-      return "Acompte payé";
+      return "Acompte paye";
     case "pending_solde":
-      return "Solde demandé";
+      return "Solde demande";
     case "paid_solde":
-      return "Solde payé";
+      return "Solde paye";
     case "refused":
-      return "Refusée";
+      return "Refusee";
   }
 }
 
@@ -97,48 +98,44 @@ function isActionRequired(status: Status) {
 
 function isCustomOnlyType(type: string) {
   const value = (type || "").toLowerCase();
-  return (
-    value.includes("sur mesure") ||
-    value.includes("kap num") ||
-    value.includes("personnalis")
-  );
+  return value.includes("sur mesure") || value.includes("kap num") || value.includes("personnalis");
 }
 
 function getNextStepText(status: Status, customOnly: boolean) {
   if (customOnly) {
     switch (status) {
       case "pending":
-        return "Action : prolonger la discussion, refuser, ou créer un lien d'acompte personnalisé.";
+        return "Action : prolonger la discussion, refuser, ou creer un lien d'acompte personnalise.";
       case "discussion":
-        return "Action : finaliser l'échange puis créer le lien d'acompte personnalisé.";
+        return "Action : finaliser l'echange puis creer le lien d'acompte personnalise.";
       case "accepted":
-        return "Acompte personnalisé envoyé. Attendre le paiement ou renvoyer un nouveau lien personnalisé.";
+        return "Acompte personnalise envoye. Attendre le paiement ou renvoyer un nouveau lien personnalise.";
       case "paid_acompte":
-        return "Acompte payé. Créer maintenant le lien de solde personnalisé.";
+        return "Acompte paye. Creer maintenant le lien de solde personnalise.";
       case "pending_solde":
-        return "Solde personnalisé envoyé. Attendre le paiement client.";
+        return "Solde personnalise envoye. Attendre le paiement client.";
       case "paid_solde":
-        return "Solde payé. Dossier finalisé.";
+        return "Solde paye. Dossier finalise.";
       case "refused":
-        return "Demande refusée. Aucun suivi requis.";
+        return "Demande refusee. Aucun suivi requis.";
     }
   }
 
   switch (status) {
     case "pending":
-      return "Décider maintenant : accepter, refuser, ou demander des précisions.";
+      return "Decider maintenant : accepter, refuser, ou demander des precisions.";
     case "discussion":
-      return "Discussion prolongée. Attendre le retour client, puis accepter ou refuser.";
+      return "Discussion prolongee. Attendre le retour client, puis accepter ou refuser.";
     case "accepted":
-      return "Acompte envoyé. Attendre le paiement, ou régénérer le lien si besoin.";
+      return "Acompte envoye. Attendre le paiement, ou regenerer le lien si besoin.";
     case "paid_acompte":
-      return "Acompte payé. Demander le solde maintenant.";
+      return "Acompte paye. Demander le solde maintenant.";
     case "pending_solde":
-      return "Solde demandé. Attendre le paiement du solde.";
+      return "Solde demande. Attendre le paiement du solde.";
     case "paid_solde":
-      return "Solde payé. Prestation finalisée.";
+      return "Solde paye. Prestation finalisee.";
     case "refused":
-      return "Demande refusée. Aucun suivi nécessaire.";
+      return "Demande refusee. Aucun suivi necessaire.";
   }
 }
 
@@ -170,7 +167,7 @@ function getSenderLabel(sender: RequestMessage["sender"]) {
     case "client":
       return "Client";
     case "system":
-      return "Système";
+      return "Systeme";
   }
 }
 
@@ -179,8 +176,10 @@ export default function AdminDashboard({
   initialId,
   messagesByRequestId = {},
 }: Props) {
+  const router = useRouter();
   const initial = initialId ?? items[0]?.id;
   const [selectedId, setSelectedId] = useState<string | undefined>(initial);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const selected = useMemo(
     () => items.find((item) => item.id === selectedId) ?? items[0],
@@ -198,6 +197,22 @@ export default function AdminDashboard({
       return a.id.localeCompare(b.id);
     });
   }, [messagesByRequestId, selected]);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === "visible") {
+        router.refresh();
+      }
+    }, 20000);
+    return () => window.clearInterval(interval);
+  }, [router]);
+
+  function handleRefresh() {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    router.refresh();
+    window.setTimeout(() => setIsRefreshing(false), 500);
+  }
 
   return (
     <div className="admin-layout">
@@ -233,9 +248,9 @@ export default function AdminDashboard({
       <div className="admin-detail">
         {!selected ? (
           <div className="admin-empty">
-            <div className="admin-empty-title">Sélectionne une demande</div>
+            <div className="admin-empty-title">Selectionne une demande</div>
             <p className="text-sm text-[var(--text-muted)]">
-              Choisis un élément dans la liste pour voir les détails et agir.
+              Choisis un element dans la liste pour voir les details et agir.
             </p>
           </div>
         ) : (
@@ -249,13 +264,26 @@ export default function AdminDashboard({
               <div className="flex items-center gap-2">
                 <span className={getStatusClasses(selected.status)}>{getStatusLabel(selected.status)}</span>
                 <span className="admin-badge">
-                  {customOnly ? "Paiement personnalisé" : "Paiement standard"}
+                  {customOnly ? "Paiement personnalise" : "Paiement standard"}
                 </span>
+                {(selected.status === "paid_acompte" || selected.status === "paid_solde") && (
+                  <span className="admin-badge admin-status admin-status-paid-auto">
+                    Paiement confirme automatiquement
+                  </span>
+                )}
                 {selected.status === "accepted" && (
                   <span className="admin-badge admin-status admin-status-awaiting">
                     En attente de paiement
                   </span>
                 )}
+                <button
+                  type="button"
+                  className={`admin-btn ${isRefreshing ? "admin-btn-muted" : ""}`}
+                  disabled={isRefreshing}
+                  onClick={handleRefresh}
+                >
+                  {isRefreshing ? "Sync..." : "Sync"}
+                </button>
               </div>
             </div>
 
@@ -291,7 +319,7 @@ export default function AdminDashboard({
                     <RegenerateLinkButton requestId={selected.id} type={selected.type} />
                     <MarkAcomptePaidButton requestId={selected.id} />
                     <button type="button" disabled className="admin-btn admin-btn-muted">
-                      Demander le solde (après acompte)
+                      Demander le solde (apres acompte)
                     </button>
                   </>
                 )}
@@ -317,11 +345,16 @@ export default function AdminDashboard({
                 )}
                 {customOnly && selected.status === "pending_solde" && (
                   <button type="button" disabled className="admin-btn admin-btn-muted">
-                    Solde personnalisé envoyé (en attente)
+                    Solde personnalise envoye (en attente)
                   </button>
                 )}
                 <DeleteRequestButton requestId={selected.id} />
               </div>
+              {(selected.status === "accepted" || selected.status === "pending_solde") && (
+                <p className="admin-helper-note">
+                  Paiement Stripe synchronise automatiquement. Les boutons manuels restent un secours.
+                </p>
+              )}
             </div>
 
             <p className="admin-section-title">Timeline du paiement</p>
@@ -335,7 +368,7 @@ export default function AdminDashboard({
               />
             </div>
             <div className="admin-stepper">
-              {["Acompte envoyé", "Acompte payé", "Solde demandé", "Solde payé"].map(
+              {["Acompte envoye", "Acompte paye", "Solde demande", "Solde paye"].map(
                 (label, index) => {
                   const currentStep = getStepIndex(selected.status);
                   const isDone = currentStep >= index;
@@ -361,7 +394,7 @@ export default function AdminDashboard({
             <p className="admin-section-title">Historique discussion</p>
             {selectedMessages.length === 0 ? (
               <div className="admin-soft text-sm text-[var(--text-muted)]">
-                Aucun message enregistré pour cette demande.
+                Aucun message enregistre pour cette demande.
               </div>
             ) : (
               <div className="admin-soft space-y-3">
@@ -393,4 +426,3 @@ export default function AdminDashboard({
     </div>
   );
 }
-

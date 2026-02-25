@@ -481,6 +481,12 @@
   color: var(--status-pending);
 }
 
+.admin-status-paid-auto {
+  border-color: color-mix(in srgb, var(--admin-accent-2) 42%, transparent);
+  background: color-mix(in srgb, var(--admin-accent-2) 14%, #fff);
+  color: color-mix(in srgb, var(--admin-accent-2) 76%, #24392f);
+}
+
 .admin-soft {
   background: #fff7ee;
   border: 1px solid rgba(43, 36, 32, 0.08);
@@ -585,6 +591,12 @@
 
 .admin-next-cta .admin-btn-primary {
   box-shadow: 0 10px 20px rgba(184, 98, 70, 0.22);
+}
+
+.admin-helper-note {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--admin-ink-muted);
 }
 
 .admin-progress {

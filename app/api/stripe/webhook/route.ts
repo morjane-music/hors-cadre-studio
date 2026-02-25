@@ -8,15 +8,34 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 async function updateRequestStatus(requestId: string, paymentType: "acompte" | "solde") {
   const supabase = createSupabaseServiceClient();
   const status = paymentType === "acompte" ? "paid_acompte" : "paid_solde";
+  const systemMessage =
+    paymentType === "acompte"
+      ? "Paiement de l'acompte confirmé automatiquement via Stripe."
+      : "Paiement du solde confirmé automatiquement via Stripe.";
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("requests")
     .update({ status })
-    .eq("id", requestId);
+    .eq("id", requestId)
+    .neq("status", status)
+    .select("id")
+    .maybeSingle();
 
   if (error) {
     console.error("[stripe] supabase update failed", error);
     return false;
+  }
+
+  if (data) {
+    const { error: messageError } = await supabase.from("request_messages").insert({
+      request_id: requestId,
+      sender: "system",
+      message: systemMessage,
+      email_status: "sent",
+    });
+    if (messageError) {
+      console.error("[stripe] request_messages insert failed", messageError);
+    }
   }
 
   return true;
