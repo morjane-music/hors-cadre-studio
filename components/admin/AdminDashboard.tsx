@@ -171,6 +171,17 @@ function getSenderLabel(sender: RequestMessage["sender"]) {
   }
 }
 
+function getMessageToneClass(sender: RequestMessage["sender"]) {
+  switch (sender) {
+    case "admin":
+      return "admin-message admin-message-admin";
+    case "client":
+      return "admin-message admin-message-client";
+    case "system":
+      return "admin-message admin-message-system";
+  }
+}
+
 export default function AdminDashboard({
   items,
   initialId,
@@ -261,7 +272,7 @@ export default function AdminDashboard({
                 <div className="admin-detail-email">{selected.email}</div>
                 <div className="admin-detail-id">ID : {selected.id}</div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="admin-status-row">
                 <span className={getStatusClasses(selected.status)}>{getStatusLabel(selected.status)}</span>
                 <span className="admin-badge">
                   {customOnly ? "Paiement personnalise" : "Paiement standard"}
@@ -278,7 +289,7 @@ export default function AdminDashboard({
                 )}
                 <button
                   type="button"
-                  className={`admin-btn ${isRefreshing ? "admin-btn-muted" : ""}`}
+                  className={`admin-btn admin-btn-sync ${isRefreshing ? "admin-btn-muted" : ""}`}
                   disabled={isRefreshing}
                   onClick={handleRefresh}
                 >
@@ -399,7 +410,10 @@ export default function AdminDashboard({
             ) : (
               <div className="admin-soft space-y-3">
                 {selectedMessages.map((m, idx) => (
-                  <div key={m.id || `${selected.id}-${m.created_at}-${idx}`} className="border-b pb-2 last:border-b-0">
+                  <div
+                    key={m.id || `${selected.id}-${m.created_at}-${idx}`}
+                    className={`${getMessageToneClass(m.sender)} border-b pb-2 last:border-b-0`}
+                  >
                     <div className="text-xs text-[var(--text-muted)] mb-1">
                       {getSenderLabel(m.sender)} · {new Date(m.created_at).toLocaleString("fr-FR")} ·
                       envoi : {m.email_status}

@@ -13,12 +13,18 @@ const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 const inboundReplyEmail =
   process.env.RESEND_INBOUND_REPLY_EMAIL || "inbound@reply.horscadrestudio.re";
 
-function getReplyTo() {
+function getReplyTo(requestId?: string) {
+  const normalizedFrom = fromEmail.trim().toLowerCase();
   const normalizedInbound = inboundReplyEmail.trim().toLowerCase();
-  if (normalizedInbound.includes("@")) {
-    return normalizedInbound;
-  }
-  return fromEmail.trim().toLowerCase();
+  const plusInbound =
+    requestId && normalizedInbound.includes("@")
+      ? `${normalizedInbound.split("@")[0]}+${requestId}@${normalizedInbound.split("@")[1]}`
+      : null;
+
+  const list = [normalizedFrom, plusInbound, normalizedInbound].filter(
+    (value): value is string => Boolean(value)
+  );
+  return [...new Set(list)];
 }
 
 async function createCheckoutSession({
@@ -314,7 +320,7 @@ export async function sendDiscussionMessage(requestId: string, message: string) 
     const result = await resend.emails.send({
       from: fromEmail,
       to: request.email,
-      replyTo: getReplyTo(),
+      replyTo: getReplyTo(requestId),
       subject: `Message de suivi concernant votre demande ${requestTag}`,
       html: `
         <p>Bonjour ${request.name || ""},</p>
