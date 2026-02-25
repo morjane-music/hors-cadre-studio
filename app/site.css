@@ -3335,7 +3335,7 @@ html[data-a11y-motion="reduce"] .site-section.site-reveal.is-visible {
     padding: 12px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 14px;
-    background: rgba(12, 14, 18, 0.92);
+    background: rgba(12, 14, 18, 0.98);
     position: fixed;
     inset: 72px 8px auto 8px;
     max-height: calc(100dvh - 82px);
@@ -3369,11 +3369,19 @@ html[data-a11y-motion="reduce"] .site-section.site-reveal.is-visible {
     min-height: 38px;
     display: inline-flex;
     align-items: center;
-    padding: 0 6px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
   }
 
   .site-nav .site-nav-cta {
     justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    border-radius: 12px;
+    padding: 10px 12px;
   }
 
   .site-section-flow-svg {
@@ -3552,7 +3560,7 @@ html[data-a11y-motion="reduce"] .site-section.site-reveal.is-visible {
     right: 8px;
     max-width: none;
     transform: none;
-    bottom: calc(88px + env(safe-area-inset-bottom));
+    bottom: calc(8px + env(safe-area-inset-bottom));
     padding: 10px 11px;
   }
 
@@ -3741,6 +3749,14 @@ html[data-a11y-motion="reduce"] .site-section.site-reveal.is-visible {
 
 body.site-menu-open {
   overflow: hidden;
+}
+
+body.site-menu-open .site-cookie-banner {
+  display: none;
+}
+
+body.site-consent-pending .site-mobile-cta-wrap {
+  display: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

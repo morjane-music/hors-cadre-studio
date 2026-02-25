@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ConsentValue = "accepted" | "refused" | null;
 
@@ -45,6 +45,12 @@ function persistConsent(value: Exclude<ConsentValue, null>) {
 
 export default function CookieBanner() {
   const [consent, setConsent] = useState<ConsentValue>(() => readStoredConsent());
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.body.classList.toggle("site-consent-pending", consent === null);
+    return () => document.body.classList.remove("site-consent-pending");
+  }, [consent]);
 
   function handleConsent(value: Exclude<ConsentValue, null>) {
     persistConsent(value);
