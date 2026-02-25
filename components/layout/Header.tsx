@@ -200,51 +200,56 @@ export default function Header() {
           <Link href="/contact" className="site-nav-cta" onClick={closeMenus}>
             Contact
           </Link>
-          <button
-            type="button"
-            className="site-fx-toggle"
-            onClick={cycleFxMode}
-            suppressHydrationWarning
-          >
-            <span suppressHydrationWarning>
-              FX {fxMode === "soft" ? "Soft" : fxMode === "high" ? "High" : "Bold"}
-            </span>
-          </button>
-          <button
-            type="button"
-            className="site-sound-toggle"
-            aria-pressed={soundOn}
-            onClick={toggleSound}
-            suppressHydrationWarning
-          >
-            <span suppressHydrationWarning>Son {soundOn ? "ON" : "OFF"}</span>
-          </button>
-          <div className="site-a11y-wrap">
-            <button
-              type="button"
-              className="site-a11y-toggle"
-              onClick={() => setA11yOpen((prev) => !prev)}
-              aria-expanded={a11yOpen}
-              aria-controls="site-a11y-panel"
-            >
-              Accessibilité
-            </button>
-            {a11yOpen ? (
-              <div id="site-a11y-panel" className="site-a11y-panel" role="dialog" aria-label="Options d'accessibilité">
-                <button type="button" className="site-a11y-option" aria-pressed={a11y.contrast} onClick={() => toggleA11y("contrast")}>
-                  Contraste renforcé
+          <div className="site-nav-tools">
+            <p className="site-nav-tools-label">Outils</p>
+            <div className="site-nav-tools-row">
+              <button
+                type="button"
+                className="site-fx-toggle"
+                onClick={cycleFxMode}
+                suppressHydrationWarning
+              >
+                <span suppressHydrationWarning>
+                  FX {fxMode === "soft" ? "Soft" : fxMode === "high" ? "High" : "Bold"}
+                </span>
+              </button>
+              <button
+                type="button"
+                className="site-sound-toggle"
+                aria-pressed={soundOn}
+                onClick={toggleSound}
+                suppressHydrationWarning
+              >
+                <span suppressHydrationWarning>Son {soundOn ? "ON" : "OFF"}</span>
+              </button>
+              <div className="site-a11y-wrap">
+                <button
+                  type="button"
+                  className="site-a11y-toggle"
+                  onClick={() => setA11yOpen((prev) => !prev)}
+                  aria-expanded={a11yOpen}
+                  aria-controls="site-a11y-panel"
+                >
+                  Accessibilité
                 </button>
-                <button type="button" className="site-a11y-option" aria-pressed={a11y.largeText} onClick={() => toggleA11y("largeText")}>
-                  Texte agrandi
-                </button>
-                <button type="button" className="site-a11y-option" aria-pressed={a11y.reduceMotion} onClick={() => toggleA11y("reduceMotion")}>
-                  Réduire les animations
-                </button>
-                <button type="button" className="site-a11y-option" aria-pressed={a11y.underlineLinks} onClick={() => toggleA11y("underlineLinks")}>
-                  Souligner tous les liens
-                </button>
+                {a11yOpen ? (
+                  <div id="site-a11y-panel" className="site-a11y-panel" role="dialog" aria-label="Options d'accessibilité">
+                    <button type="button" className="site-a11y-option" aria-pressed={a11y.contrast} onClick={() => toggleA11y("contrast")}>
+                      Contraste renforcé
+                    </button>
+                    <button type="button" className="site-a11y-option" aria-pressed={a11y.largeText} onClick={() => toggleA11y("largeText")}>
+                      Texte agrandi
+                    </button>
+                    <button type="button" className="site-a11y-option" aria-pressed={a11y.reduceMotion} onClick={() => toggleA11y("reduceMotion")}>
+                      Réduire les animations
+                    </button>
+                    <button type="button" className="site-a11y-option" aria-pressed={a11y.underlineLinks} onClick={() => toggleA11y("underlineLinks")}>
+                      Souligner tous les liens
+                    </button>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
+            </div>
           </div>
         </div>
         {open ? <button type="button" className="site-menu-backdrop" aria-label="Fermer le menu" onClick={closeMenus} /> : null}
