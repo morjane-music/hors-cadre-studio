@@ -11,6 +11,7 @@ import RequestSoldeButton from "@/app/admin/RequestSoldeButton";
 import ProlongDiscussionButton from "@/app/admin/ProlongDiscussionButton";
 import CustomPaymentLinkButton from "@/app/admin/CustomPaymentLinkButton";
 import DeleteRequestButton from "@/app/admin/DeleteRequestButton";
+import { deleteRequestsBulk } from "@/app/admin/actions";
 import PaymentLinkField from "@/components/admin/PaymentLinkField";
 
 type Status =
@@ -230,6 +231,10 @@ export default function AdminDashboard({
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [paletteQuery, setPaletteQuery] = useState("");
   const [localLaneOverrides, setLocalLaneOverrides] = useState<Record<string, string>>({});
+  const [selectedForDeletion, setSelectedForDeletion] = useState<Set<string>>(new Set());
+  const [bulkConfirmOpen, setBulkConfirmOpen] = useState(false);
+  const [bulkConfirmText, setBulkConfirmText] = useState("");
+  const [bulkDeleting, setBulkDeleting] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   const acceptRef = useRef<HTMLDivElement>(null);
@@ -340,6 +345,49 @@ export default function AdminDashboard({
     window.setTimeout(() => setIsRefreshing(false), 550);
   }
 
+  function toggleSelection(requestId: string) {
+    setSelectedForDeletion((prev) => {
+      const next = new Set(prev);
+      if (next.has(requestId)) next.delete(requestId);
+      else next.add(requestId);
+      return next;
+    });
+  }
+
+  function toggleAllVisible() {
+    const visibleIds = filteredItems.map((item) => item.id);
+    const allSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedForDeletion.has(id));
+    setSelectedForDeletion((prev) => {
+      const next = new Set(prev);
+      if (allSelected) {
+        visibleIds.forEach((id) => next.delete(id));
+      } else {
+        visibleIds.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  }
+
+  async function handleBulkDelete() {
+    if (bulkConfirmText.trim().toUpperCase() !== "SUPPRIMER") return;
+    const ids = Array.from(selectedForDeletion);
+    if (ids.length === 0) return;
+    try {
+      setBulkDeleting(true);
+      await deleteRequestsBulk(ids);
+      setSelectedForDeletion(new Set());
+      setBulkConfirmText("");
+      setBulkConfirmOpen(false);
+      setToast(`${ids.length} demande(s) supprimee(s)`);
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      setToast("Echec suppression multiple");
+    } finally {
+      setBulkDeleting(false);
+    }
+  }
+
   function runCommand(commandId: string) {
     if (commandId === "sync") {
       handleRefresh();
@@ -422,6 +470,21 @@ export default function AdminDashboard({
           ))}
         </div>
         <div className="admin-v2-top-actions">
+          <button type="button" className="admin-btn" onClick={toggleAllVisible}>
+            {filteredItems.length > 0 &&
+            filteredItems.every((item) => selectedForDeletion.has(item.id))
+              ? "Tout deselectionner"
+              : "Tout selectionner"}
+          </button>
+          {selectedForDeletion.size > 0 && (
+            <button
+              type="button"
+              className="admin-btn admin-btn-danger"
+              onClick={() => setBulkConfirmOpen(true)}
+            >
+              Supprimer ({selectedForDeletion.size})
+            </button>
+          )}
           <button type="button" className="admin-btn admin-btn-sync" onClick={() => setPaletteOpen(true)}>
             Ctrl/Cmd + K
           </button>
@@ -461,6 +524,15 @@ export default function AdminDashboard({
                   className={`admin-v2-card ${selected?.id === item.id ? "is-selected" : ""}`}
                   onClick={() => setSelectedId(item.id)}
                 >
+                  <label className="admin-v2-card-select">
+                    <input
+                      type="checkbox"
+                      checked={selectedForDeletion.has(item.id)}
+                      onChange={() => toggleSelection(item.id)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <span>Selection</span>
+                  </label>
                   <div className="admin-v2-card-title">{item.name || "Sans nom"}</div>
                   <div className="admin-v2-card-meta">{item.type}</div>
                   <div className="admin-v2-card-meta">{item.email}</div>
@@ -610,6 +682,43 @@ export default function AdminDashboard({
                   {cmd.label}
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {bulkConfirmOpen && (
+        <div className="admin-v2-palette-backdrop" onClick={() => setBulkConfirmOpen(false)}>
+          <div className="admin-v2-palette" onClick={(e) => e.stopPropagation()}>
+            <h3 className="admin-v2-modal-title">Suppression multiple sécurisée</h3>
+            <p className="admin-v2-modal-text">
+              Tu vas supprimer {selectedForDeletion.size} demande(s) et tous les messages liés.
+            </p>
+            <p className="admin-v2-modal-text">
+              Saisis <strong>SUPPRIMER</strong> pour confirmer.
+            </p>
+            <input
+              value={bulkConfirmText}
+              onChange={(e) => setBulkConfirmText(e.target.value)}
+              className="admin-input w-full"
+              placeholder="SUPPRIMER"
+            />
+            <div className="admin-v2-modal-actions">
+              <button type="button" className="admin-btn" onClick={() => setBulkConfirmOpen(false)}>
+                Annuler
+              </button>
+              <button
+                type="button"
+                className={`admin-btn admin-btn-danger ${
+                  bulkDeleting || bulkConfirmText.trim().toUpperCase() !== "SUPPRIMER"
+                    ? "admin-btn-muted"
+                    : ""
+                }`}
+                disabled={bulkDeleting || bulkConfirmText.trim().toUpperCase() !== "SUPPRIMER"}
+                onClick={handleBulkDelete}
+              >
+                {bulkDeleting ? "Suppression..." : "Confirmer suppression"}
+              </button>
             </div>
           </div>
         </div>

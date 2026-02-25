@@ -526,5 +526,30 @@ export async function deleteRequest(requestId: string) {
   }
 }
 
+export async function deleteRequestsBulk(requestIds: string[]) {
+  await assertAdmin();
+
+  const ids = [...new Set((requestIds ?? []).map((id) => String(id).trim()).filter(Boolean))];
+  if (ids.length === 0) {
+    throw new Error("Aucune demande sélectionnée");
+  }
+
+  const service = createSupabaseServiceClient();
+  const { error: messagesError } = await service
+    .from("request_messages")
+    .delete()
+    .in("request_id", ids);
+  if (messagesError) {
+    console.error("Erreur suppression messages liés (bulk) :", messagesError);
+    throw new Error("Impossible de supprimer les messages liés");
+  }
+
+  const { error } = await service.from("requests").delete().in("id", ids);
+  if (error) {
+    console.error("Erreur suppression demandes (bulk) :", error);
+    throw new Error("Impossible de supprimer les demandes sélectionnées");
+  }
+}
+
 
 

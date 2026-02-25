@@ -1073,6 +1073,19 @@
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+.admin-v2-card-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  color: var(--admin-ink-muted);
+}
+
+.admin-v2-card-select input {
+  width: 14px;
+  height: 14px;
+}
+
 .admin-v2-card:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(43, 36, 32, 0.12);
@@ -1143,6 +1156,24 @@
   padding: 12px;
   display: grid;
   gap: 10px;
+}
+
+.admin-v2-modal-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.admin-v2-modal-text {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--admin-ink-muted);
+}
+
+.admin-v2-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .admin-v2-palette-list {
