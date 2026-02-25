@@ -9,6 +9,7 @@ import RefuseButton from "@/app/admin/RefuseButton";
 import RequestSoldeButton from "@/app/admin/RequestSoldeButton";
 import ProlongDiscussionButton from "@/app/admin/ProlongDiscussionButton";
 import CustomPaymentLinkButton from "@/app/admin/CustomPaymentLinkButton";
+import DeleteRequestButton from "@/app/admin/DeleteRequestButton";
 import PaymentLinkField from "@/components/admin/PaymentLinkField";
 
 type Status =
@@ -33,6 +34,7 @@ type RequestItem = {
 };
 
 type RequestMessage = {
+  id: string;
   request_id: string;
   sender: "admin" | "client" | "system";
   message: string;
@@ -186,7 +188,16 @@ export default function AdminDashboard({
   );
 
   const customOnly = selected ? isCustomOnlyType(selected.type) : false;
-  const selectedMessages = selected ? messagesByRequestId[selected.id] ?? [] : [];
+  const selectedMessages = useMemo(() => {
+    if (!selected) return [];
+    const source = messagesByRequestId[selected.id] ?? [];
+    return [...source].sort((a, b) => {
+      const aTime = new Date(a.created_at).getTime();
+      const bTime = new Date(b.created_at).getTime();
+      if (aTime !== bTime) return aTime - bTime;
+      return a.id.localeCompare(b.id);
+    });
+  }, [messagesByRequestId, selected]);
 
   return (
     <div className="admin-layout">
@@ -309,6 +320,7 @@ export default function AdminDashboard({
                     Solde personnalisé envoyé (en attente)
                   </button>
                 )}
+                <DeleteRequestButton requestId={selected.id} />
               </div>
             </div>
 
@@ -354,7 +366,7 @@ export default function AdminDashboard({
             ) : (
               <div className="admin-soft space-y-3">
                 {selectedMessages.map((m, idx) => (
-                  <div key={`${selected.id}-${m.created_at}-${idx}`} className="border-b pb-2 last:border-b-0">
+                  <div key={m.id || `${selected.id}-${m.created_at}-${idx}`} className="border-b pb-2 last:border-b-0">
                     <div className="text-xs text-[var(--text-muted)] mb-1">
                       {getSenderLabel(m.sender)} · {new Date(m.created_at).toLocaleString("fr-FR")} ·
                       envoi : {m.email_status}
@@ -381,3 +393,4 @@ export default function AdminDashboard({
     </div>
   );
 }
+

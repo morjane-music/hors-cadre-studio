@@ -75,6 +75,24 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.body.classList.toggle("site-menu-open", open);
+    return () => document.body.classList.remove("site-menu-open");
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        setA11yOpen(false);
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   function playUiBeep(frequency: number, length = 0.11) {
     if (!soundOn) return;
     if (!audioRef.current) audioRef.current = new AudioContext();
@@ -169,7 +187,7 @@ export default function Header() {
           className="site-burger"
           onClick={() => setOpen((prev) => !prev)}
           aria-expanded={open}
-          aria-label="Ouvrir le menu"
+          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
         >
           Menu
         </button>
@@ -229,6 +247,7 @@ export default function Header() {
             ) : null}
           </div>
         </div>
+        {open ? <button type="button" className="site-menu-backdrop" aria-label="Fermer le menu" onClick={closeMenus} /> : null}
       </nav>
     </header>
   );

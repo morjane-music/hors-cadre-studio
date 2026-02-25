@@ -19,6 +19,7 @@ type Status =
 type SortKey = "newest" | "oldest" | "name" | "status";
 
 type RequestMessage = {
+  id: string;
   request_id: string;
   sender: "admin" | "client" | "system";
   message: string;
@@ -132,7 +133,7 @@ export default async function AdminPage({
     requestIds.length > 0
       ? await supabase
           .from("request_messages")
-          .select("request_id,sender,message,email_status,created_at")
+          .select("id,request_id,sender,message,email_status,created_at")
           .in("request_id", requestIds)
           .order("created_at", { ascending: true })
       : { data: [] as RequestMessage[] };

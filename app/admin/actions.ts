@@ -13,11 +13,12 @@ const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 const inboundReplyEmail =
   process.env.RESEND_INBOUND_REPLY_EMAIL || "inbound@reply.horscadrestudio.re";
 
-function getReplyToList() {
-  const values = [fromEmail, inboundReplyEmail]
-    .map((value) => value.trim().toLowerCase())
-    .filter(Boolean);
-  return [...new Set(values)];
+function getReplyTo() {
+  const normalizedInbound = inboundReplyEmail.trim().toLowerCase();
+  if (normalizedInbound.includes("@")) {
+    return normalizedInbound;
+  }
+  return fromEmail.trim().toLowerCase();
 }
 
 async function createCheckoutSession({
@@ -313,7 +314,7 @@ export async function sendDiscussionMessage(requestId: string, message: string) 
     const result = await resend.emails.send({
       from: fromEmail,
       to: request.email,
-      replyTo: getReplyToList(),
+      replyTo: getReplyTo(),
       subject: `Message de suivi concernant votre demande ${requestTag}`,
       html: `
         <p>Bonjour ${request.name || ""},</p>
@@ -502,6 +503,15 @@ export async function deleteRequest(requestId: string) {
   await assertAdmin();
 
   const service = createSupabaseServiceClient();
+  const { error: messagesError } = await service
+    .from("request_messages")
+    .delete()
+    .eq("request_id", requestId);
+  if (messagesError) {
+    console.error("Erreur suppression messages liés :", messagesError);
+    throw new Error("Impossible de supprimer les messages liés");
+  }
+
   const { error } = await service.from("requests").delete().eq("id", requestId);
 
   if (error) {

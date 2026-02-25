@@ -5,11 +5,13 @@ import { createSupabaseServiceClient } from "@/lib/supabase-service";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const webhookSecret = process.env.RESEND_WEBHOOK_SECRET;
 const REQUEST_ID_REGEX =
-  /\[REQ:([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\]/i;
+  /\[REQ:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\]/i;
+const UUID_REGEX = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i;
 
 type InboundPayload = {
   type?: string;
   data?: {
+    email_id?: string;
     from?: string | { email?: string };
     to?: string | string[] | { email?: string } | Array<{ email?: string }>;
     subject?: string;
@@ -17,6 +19,14 @@ type InboundPayload = {
     html?: string;
     created_at?: string;
   };
+};
+
+type ResendInboundMessage = {
+  from?: string | { email?: string };
+  to?: string | string[] | { email?: string } | Array<{ email?: string }>;
+  subject?: string;
+  text?: string;
+  html?: string;
 };
 
 function getHeader(request: Request, key: string) {
@@ -53,18 +63,56 @@ function extractEmail(input: unknown): string | null {
   return null;
 }
 
-async function resolveRequestId(payload: InboundPayload, senderEmail: string | null) {
-  const subject = payload.data?.subject ?? "";
-  const tagged = subject.match(REQUEST_ID_REGEX)?.[1];
+function extractRequestIdFromText(value: string | null | undefined) {
+  if (!value) return null;
+  const tagged = value.match(REQUEST_ID_REGEX)?.[1];
   if (tagged) return tagged;
+  const anyUuid = value.match(UUID_REGEX)?.[1];
+  return anyUuid ?? null;
+}
 
-  if (!senderEmail) return null;
+function extractRequestIdFromRecipient(recipientEmail: string | null) {
+  if (!recipientEmail) return null;
+  const localPart = recipientEmail.split("@")[0] ?? "";
+  const plusChunk = localPart.includes("+") ? localPart.split("+").pop() : null;
+  return extractRequestIdFromText(plusChunk);
+}
+
+async function fetchInboundMessage(emailId: string | undefined): Promise<ResendInboundMessage | null> {
+  if (!emailId) return null;
+  try {
+    const result = await resend.emails.receiving.get(emailId);
+    if ((result as { error?: unknown }).error) {
+      return null;
+    }
+    return ((result as { data?: ResendInboundMessage | null }).data ?? null) as ResendInboundMessage | null;
+  } catch {
+    return null;
+  }
+}
+
+async function resolveRequestId(input: {
+  senderEmail: string | null;
+  recipientEmail: string | null;
+  subject: string;
+  text: string;
+}) {
+  const fromSubject = extractRequestIdFromText(input.subject);
+  if (fromSubject) return fromSubject;
+
+  const fromRecipient = extractRequestIdFromRecipient(input.recipientEmail);
+  if (fromRecipient) return fromRecipient;
+
+  const fromBody = extractRequestIdFromText(input.text);
+  if (fromBody) return fromBody;
+
+  if (!input.senderEmail) return null;
 
   const service = createSupabaseServiceClient();
   const { data } = await service
     .from("requests")
     .select("id")
-    .eq("email", senderEmail)
+    .eq("email", input.senderEmail)
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -110,19 +158,31 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, skipped: "ignored_event_type" });
   }
 
-  const senderEmail = extractEmail(payload.data?.from);
-  const recipientEmail = extractEmail(payload.data?.to);
-  const requestId = await resolveRequestId(payload, senderEmail);
+  const inboundMessage = await fetchInboundMessage(payload.data?.email_id);
+  const senderEmail = extractEmail(inboundMessage?.from ?? payload.data?.from);
+  const recipientEmail = extractEmail(inboundMessage?.to ?? payload.data?.to);
+  const subject = inboundMessage?.subject ?? payload.data?.subject ?? "";
   const message =
+    inboundMessage?.text?.trim() ||
     payload.data?.text?.trim() ||
+    inboundMessage?.html?.trim() ||
     payload.data?.html?.trim() ||
-    "[Réponse client sans contenu texte exploitable]";
+    "[Reponse client sans contenu texte exploitable]";
+
+  const requestId = await resolveRequestId({
+    senderEmail,
+    recipientEmail,
+    subject,
+    text: message,
+  });
 
   if (!requestId) {
     console.warn("[resend-inbound] unmatched_request", {
       eventType,
       senderEmail,
-      subject: payload.data?.subject,
+      recipientEmail,
+      emailId: payload.data?.email_id ?? null,
+      subject,
     });
     return NextResponse.json({ ok: true, skipped: "unmatched_request" });
   }
@@ -134,7 +194,7 @@ export async function POST(request: Request) {
     message,
     email_to: recipientEmail,
     email_status: "sent",
-    resend_id: headers.id || null,
+    resend_id: payload.data?.email_id ?? headers.id ?? null,
     error_message: null,
   });
 
