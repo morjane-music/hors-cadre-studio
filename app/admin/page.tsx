@@ -27,6 +27,56 @@ type RequestMessage = {
   created_at: string;
 };
 
+type Metrics = {
+  monthlyRevenue: number;
+  conversionRate: number;
+  avgResponseHours: number;
+  activeCount: number;
+  sparkline: number[];
+};
+
+function getOfferPrice(type: string) {
+  const normalized = (type || "").trim();
+  switch (normalized) {
+    case "Offre Essentiel":
+      return 1100;
+    case "Site vitrine":
+    case "Site vitrine (one-shot)":
+      return 1500;
+    case "Identité visuelle":
+    case "Identité visuelle (one-shot)":
+      return 1400;
+    case "Direction artistique":
+    case "Direction artistique (one-shot)":
+      return 2200;
+    case "Pack Lancement":
+      return 1900;
+    case "Pack Signature":
+      return 2900;
+    case "Pack Hors Cadre":
+      return 4200;
+    default:
+      return 0;
+  }
+}
+
+function buildSparkline(values: Array<{ created_at?: string | null }>) {
+  const buckets = Array.from({ length: 8 }, () => 0);
+  const now = new Date();
+  const weekMs = 7 * 24 * 60 * 60 * 1000;
+  const start = now.getTime() - weekMs * 8;
+
+  for (const row of values) {
+    if (!row.created_at) continue;
+    const time = new Date(row.created_at).getTime();
+    if (Number.isNaN(time) || time < start) continue;
+    const delta = time - start;
+    const idx = Math.min(7, Math.max(0, Math.floor(delta / weekMs)));
+    buckets[idx] += 1;
+  }
+  return buckets;
+}
+
 function getSortLabel(sort: SortKey) {
   switch (sort) {
     case "oldest":
@@ -71,6 +121,17 @@ export default async function AdminPage({
     .select("*")
     .order("created_at", { ascending: false });
 
+  const allRequestIds = (requests ?? []).map((row) => row.id);
+  const { data: firstAdminMessages } =
+    allRequestIds.length > 0
+      ? await supabase
+          .from("request_messages")
+          .select("request_id,created_at")
+          .eq("sender", "admin")
+          .in("request_id", allRequestIds)
+          .order("created_at", { ascending: true })
+      : { data: [] as Array<{ request_id: string; created_at: string }> };
+
   const total = requests?.length ?? 0;
   const pending = requests?.filter((r) => r.status === "pending").length ?? 0;
   const discussion = requests?.filter((r) => r.status === "discussion").length ?? 0;
@@ -79,6 +140,48 @@ export default async function AdminPage({
   const pendingSolde = requests?.filter((r) => r.status === "pending_solde").length ?? 0;
   const paidSolde = requests?.filter((r) => r.status === "paid_solde").length ?? 0;
   const refused = requests?.filter((r) => r.status === "refused").length ?? 0;
+  const activeCount =
+    requests?.filter((r) =>
+      ["pending", "discussion", "accepted", "paid_acompte", "pending_solde"].includes(r.status)
+    ).length ?? 0;
+
+  const now = new Date();
+  const month = now.getMonth();
+  const year = now.getFullYear();
+  const monthlyRevenue = (requests ?? [])
+    .filter((r) => {
+      if (r.status !== "paid_solde" || !r.created_at) return false;
+      const d = new Date(r.created_at);
+      return d.getMonth() === month && d.getFullYear() === year;
+    })
+    .reduce((sum, row) => sum + getOfferPrice(String(row.type ?? "")), 0);
+
+  const conversionRate = total > 0 ? Math.round((paidSolde / total) * 100) : 0;
+  const firstMessageByRequest = new Map<string, string>();
+  for (const row of firstAdminMessages ?? []) {
+    if (!firstMessageByRequest.has(row.request_id)) {
+      firstMessageByRequest.set(row.request_id, row.created_at);
+    }
+  }
+  const delays = (requests ?? [])
+    .map((r) => {
+      const msgAt = firstMessageByRequest.get(r.id);
+      if (!r.created_at || !msgAt) return null;
+      const delta = new Date(msgAt).getTime() - new Date(r.created_at).getTime();
+      if (Number.isNaN(delta) || delta < 0) return null;
+      return delta / (1000 * 60 * 60);
+    })
+    .filter((v): v is number => v !== null);
+  const avgResponseHours =
+    delays.length > 0 ? Math.round((delays.reduce((a, b) => a + b, 0) / delays.length) * 10) / 10 : 0;
+  const sparkline = buildSparkline(requests ?? []);
+  const metrics: Metrics = {
+    monthlyRevenue,
+    conversionRate,
+    avgResponseHours,
+    activeCount,
+    sparkline,
+  };
 
   const statusFilter = resolvedSearchParams?.status as Status | undefined;
   const searchQuery = (resolvedSearchParams?.q ?? "").trim().toLowerCase();
@@ -274,6 +377,7 @@ export default async function AdminPage({
               items={items}
               initialId={items[0]?.id}
               messagesByRequestId={messagesByRequestId}
+              metrics={metrics}
             />
           )}
 
