@@ -26,7 +26,7 @@ export default function PrestationsPage() {
               Sites web & identité
             </Link>
             <Link href="#studio-graphique" className="site-proof-pill">
-              Visuels événementiels
+              Visuels numériques
             </Link>
           </div>
           <div className="site-cta">
@@ -110,12 +110,12 @@ export default function PrestationsPage() {
         </div>
 
         <div id="studio-graphique" className="site-section site-section-anim site-reveal accent-sand" data-reveal data-reveal-delay="90">
-          <div className="site-section-title">Visuels événementiels</div>
+          <div className="site-section-title">Visuels numériques</div>
           <div className="site-grid site-stagger" data-flow>
             <Link href="/contact?offer=Visuel%20Essentiel" className="site-card site-card-link" data-cursor data-sound>
               <div className="site-card-title">Visuel Essentiel</div>
               <div className="site-list-item">Format compact pour annonces ponctuelles, événements locaux et sorties rapides.</div>
-              <div className="site-list-item">1 concept visuel structuré, 1 session d&apos;ajustement, export print ou digital.</div>
+              <div className="site-list-item">1 concept visuel structuré, 1 session d&apos;ajustement, export digital prêt pour web et réseaux sociaux.</div>
               <div className="site-list-item">Livraison prête à diffuser.</div>
               <div className="site-pill">120 €</div>
             </Link>
@@ -123,21 +123,21 @@ export default function PrestationsPage() {
               <div className="site-card-title">Visuel Plus</div>
               <div className="site-list-item">Pour sorties musicales et communications plus travaillées.</div>
               <div className="site-list-item">2 propositions créatives, 2 sessions d&apos;ajustement.</div>
-              <div className="site-list-item">Version print + digital, formats principaux optimisés.</div>
+              <div className="site-list-item">Formats digitaux optimisés pour les principaux canaux (feed, story, bannière).</div>
               <div className="site-pill">180 €</div>
             </Link>
             <Link href="/contact?offer=Pack%20%C3%89v%C3%A9nement" className="site-card site-card-link" data-cursor data-sound>
               <div className="site-card-title">Pack Événement</div>
               <div className="site-list-item">Pour concerts, lancements et diffusion multi-plateformes.</div>
-              <div className="site-list-item">Affiche principale + déclinaisons réseaux (carré, story, bannière).</div>
+              <div className="site-list-item">Visuel principal + déclinaisons réseaux (carré, story, bannière).</div>
               <div className="site-list-item">Harmonisation globale et ajustements inclus.</div>
               <div className="site-pill">350 €</div>
             </Link>
           </div>
           <p className="site-note">
-            Les formats sont structurés pour garantir efficacité et qualité.
+            Les formats sont pensés pour une diffusion digitale fluide et cohérente.
             <br />
-            Pour des demandes complexes ou multi-supports spécifiques, un devis personnalisé peut être proposé.
+            Pour des besoins plus complexes (multi-campagnes, volume élevé, direction visuelle étendue), un devis personnalisé peut être proposé.
           </p>
         </div>
 
