@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,8 +15,8 @@ type FooterContext = {
 function getFooterContext(pathname: string): FooterContext {
   if (pathname.startsWith("/prestations")) {
     return {
-      title: "Choisir juste. Exécuter fort.",
-      copy: "À l’unité ou sur mesure : un périmètre clair, un rendu prêt à activer.",
+      title: "Commencer juste. Monter fort.",
+      copy: "Visuel digital, identité ou site : un périmètre clair, un rendu prêt à publier.",
       primaryHref: "/contact",
       primaryLabel: "Lancer une demande",
       secondaryHref: "/processus",
@@ -69,8 +69,8 @@ function getFooterContext(pathname: string): FooterContext {
   }
 
   return {
-    title: "Direction forte. Exécution nette.",
-    copy: "Sites, identités et direction artistique pour artistes, indépendants et petites marques.",
+    title: "Local, digital, mémorable.",
+    copy: "Sites, identités et visuels numériques pour artistes, indépendants et projets locaux.",
     primaryHref: "/contact",
     primaryLabel: "Démarrer un projet",
     secondaryHref: "/projets",
@@ -94,9 +94,9 @@ export default function Footer() {
   ];
 
   const frameItems = [
-    { label: "À l’unité + devis sur mesure", icon: "bolt" as const },
+    { label: "Visuels dès 50 €", icon: "bolt" as const },
     { label: "Réponse initiale rapide (24-48h)", icon: "time" as const },
-    { label: "Maintenance mensuelle disponible", icon: "gear" as const },
+    { label: "Sites dès 850 €", icon: "gear" as const },
   ];
 
   return (
@@ -141,7 +141,7 @@ export default function Footer() {
 
       <div className="site-footer-bottom">
         <span>© {new Date().getFullYear()} Hors Cadre Studio</span>
-        <span>Direction créative · Web · Identité visuelle</span>
+        <span>Sites · Identités · Visuels numériques</span>
         <span className="site-footer-legal-links">
           <Link href="/accessibilite">Accessibilité</Link>
           <Link href="/politique-confidentialite">Confidentialité</Link>
@@ -151,4 +151,5 @@ export default function Footer() {
     </footer>
   );
 }
+
 

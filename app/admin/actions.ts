@@ -1,4 +1,4 @@
-﻿"use server";
+"use server";
 
 import { Resend } from "resend";
 import Stripe from "stripe";
@@ -66,41 +66,51 @@ async function createCheckoutSession({
 function getTotalPrice(type: string) {
   const normalized = type.trim();
   switch (normalized) {
-    case "Offre Essentiel":
-      return 1100;
-    case "Site vitrine":
-    case "Site vitrine (one-shot)":
-      return 1500;
-    case "Identité visuelle":
-    case "Identité visuelle (one-shot)":
-      return 1400;
-    case "Direction artistique":
-    case "Direction artistique (one-shot)":
-      return 2200;
+    case "Visuel Flash":
+      return 50;
     case "Visuel Essentiel":
-      return 120;
+      return 80;
     case "Visuel Plus":
-      return 180;
+      return 130;
+    case "Pack Événement Digital":
     case "Pack Événement":
     case "Pack Event":
-      return 350;
+      return 250;
+    case "Direction campagne digitale":
+      return 450;
+    case "Mini identité":
+      return 490;
+    case "Identité complète":
+    case "Identité visuelle":
+    case "Identité visuelle (one-shot)":
+      return 950;
+    case "Identité signature":
+      return 1400;
+    case "One-page Essentiel":
+    case "Offre Essentiel":
+      return 850;
+    case "Site vitrine simple":
+    case "Site vitrine":
+    case "Site vitrine (one-shot)":
+      return 1200;
+    case "Site vitrine signature":
+      return 1600;
     case "Pack Lancement":
-      return 1900;
+      return 1500;
     case "Pack Signature":
-      return 2900;
+      return 2400;
     case "Pack Hors Cadre":
-      return 4200;
+      return 3500;
     case "Maintenance Essentielle":
-      return 90;
+      return 70;
     case "Maintenance Premium":
-      return 150;
+      return 140;
     default:
       throw new Error(
         "Type sans prix fixe. Utilise 'Générer lien personnalisé' pour ce dossier."
       );
   }
 }
-
 async function assertAdmin() {
   const auth = await requireAdmin();
   if (!auth.ok) {
@@ -550,6 +560,7 @@ export async function deleteRequestsBulk(requestIds: string[]) {
     throw new Error("Impossible de supprimer les demandes sélectionnées");
   }
 }
+
 
 
 

@@ -1,4 +1,4 @@
-﻿import "./globals.css";
+import "./globals.css";
 import type { Metadata } from "next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -17,11 +17,11 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", type: "image/png" }],
   },
   title: {
-    default: "Hors Cadre Studio - Direction créative, web et identité visuelle",
+    default: "Hors Cadre Studio - Sites, identités et visuels numériques à La Réunion",
     template: "%s | Hors Cadre Studio",
   },
   description:
-    "Hors Cadre Studio conçoit des sites, identités visuelles et directions artistiques pour artistes, indépendants et petites marques.",
+    "Hors Cadre Studio crée des sites, identités et visuels numériques pour artistes, indépendants et projets locaux à La Réunion.",
   alternates: {
     canonical: "/",
   },
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     siteName: "Hors Cadre Studio",
-    title: "Hors Cadre Studio - Direction créative, web et identité visuelle",
-    description: "Un studio créatif orienté résultat : direction assumée, design fort, exécution singulière.",
+    title: "Hors Cadre Studio - Sites, identités et visuels numériques à La Réunion",
+    description: "Un studio créatif à La Réunion : sites, identités et visuels numériques avec direction forte et prix lisibles.",
     url: "/",
     images: [
       {
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Hors Cadre Studio",
-    description: "Direction créative, web et identité visuelle.",
+    description: "Sites, identités et visuels numériques à La Réunion.",
     images: ["/brand/logo-full.png"],
   },
 };
@@ -73,5 +73,6 @@ export default function RootLayout({
     </html>
   );
 }
+
 
 

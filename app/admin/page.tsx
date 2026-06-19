@@ -38,28 +38,49 @@ type Metrics = {
 function getOfferPrice(type: string) {
   const normalized = (type || "").trim();
   switch (normalized) {
-    case "Offre Essentiel":
-      return 1100;
-    case "Site vitrine":
-    case "Site vitrine (one-shot)":
-      return 1500;
+    case "Visuel Flash":
+      return 50;
+    case "Visuel Essentiel":
+      return 80;
+    case "Visuel Plus":
+      return 130;
+    case "Pack Événement Digital":
+    case "Pack Événement":
+    case "Pack Event":
+      return 250;
+    case "Direction campagne digitale":
+      return 450;
+    case "Mini identité":
+      return 490;
+    case "Identité complète":
     case "Identité visuelle":
     case "Identité visuelle (one-shot)":
+      return 950;
+    case "Identité signature":
       return 1400;
-    case "Direction artistique":
-    case "Direction artistique (one-shot)":
-      return 2200;
+    case "One-page Essentiel":
+    case "Offre Essentiel":
+      return 850;
+    case "Site vitrine simple":
+    case "Site vitrine":
+    case "Site vitrine (one-shot)":
+      return 1200;
+    case "Site vitrine signature":
+      return 1600;
     case "Pack Lancement":
-      return 1900;
+      return 1500;
     case "Pack Signature":
-      return 2900;
+      return 2400;
     case "Pack Hors Cadre":
-      return 4200;
+      return 3500;
+    case "Maintenance Essentielle":
+      return 70;
+    case "Maintenance Premium":
+      return 140;
     default:
       return 0;
   }
 }
-
 function buildSparkline(values: Array<{ created_at?: string | null }>) {
   const buckets = Array.from({ length: 8 }, () => 0);
   const now = new Date();
@@ -413,3 +434,4 @@ export default async function AdminPage({
     </div>
   );
 }
+

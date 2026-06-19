@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
@@ -28,7 +28,7 @@ export default function RequestForm({ presetType }: Props) {
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
-    type: presetType ?? "Site vitrine",
+    type: presetType ?? "One-page Essentiel",
     message: "",
   });
   const hasInteractedRef = useRef(false);
@@ -110,7 +110,7 @@ export default function RequestForm({ presetType }: Props) {
     setForm({
       name: "",
       email: "",
-      type: presetType ?? "Site vitrine",
+      type: presetType ?? "One-page Essentiel",
       message: "",
     });
   }
@@ -191,13 +191,18 @@ export default function RequestForm({ presetType }: Props) {
                 aria-invalid={hasError}
                 aria-describedby={feedback ? feedbackId : undefined}
               >
-                <option>Site vitrine</option>
-                <option>Offre Essentiel</option>
-                <option>Identité visuelle</option>
-                <option>Direction artistique</option>
+                                <option>Visuel Flash</option>
                 <option>Visuel Essentiel</option>
                 <option>Visuel Plus</option>
-                <option>Pack Événement</option>
+                <option>Pack Événement Digital</option>
+                <option>Direction campagne digitale</option>
+                <option>Mini identité</option>
+                <option>Identité complète</option>
+                <option>Identité signature</option>
+                <option>One-page Essentiel</option>
+                <option>Site vitrine simple</option>
+                <option>Site vitrine signature</option>
+                <option>Site sur mesure</option>
                 <option>Pack Lancement</option>
                 <option>Pack Signature</option>
                 <option>Pack Hors Cadre</option>
@@ -284,4 +289,5 @@ export default function RequestForm({ presetType }: Props) {
     </form>
   );
 }
+
 
